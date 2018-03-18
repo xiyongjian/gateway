@@ -1,0 +1,2 @@
+gateway/_version.py export-subst
+*.ipynb binary

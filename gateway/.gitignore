@@ -1,5 +1,3 @@
-__pycache__
-
 .bundle
 db/*.sqlite3
 log/*.log
@@ -76,4 +74,3 @@ gateway.iml
 TAGS
 
 .ipynb_checkpoints/
-
