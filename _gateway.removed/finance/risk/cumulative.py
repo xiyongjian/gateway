@@ -143,6 +143,13 @@ class RiskMetricsCumulative(object):
     def update(self, dt, algorithm_returns, benchmark_returns, leverage):
         # Keep track of latest dt for use in to_dict and other methods
         # that report current state.
+
+        try :
+            dt_loc = self.cont_index.get_loc(dt)
+        except Exception as e :
+            log.info("missing dt %s in cont_index"%(str(dt)))
+            return
+
         self.latest_dt = dt
         dt_loc = self.cont_index.get_loc(dt)
         self.latest_dt_loc = dt_loc

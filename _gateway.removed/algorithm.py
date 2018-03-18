@@ -136,6 +136,8 @@ import gateway.protocol
 from gateway.sources.requests_csv import PandasRequestsCSV
 
 from gateway.gens.sim_engine import MinuteSimulationClock
+from gateway.gens import sim_engine2
+
 from gateway.sources.benchmark_source import BenchmarkSource
 from gateway.gateway_warnings import GatewayDeprecationWarning
 
@@ -267,6 +269,8 @@ class TradingAlgorithm(object):
         self.logger = None
 
         self.data_portal = kwargs.pop('data_portal', None)
+
+        self.clock_file = kwargs.pop('clock_file', None)
 
         # If an env has been provided, pop it
         self.trading_environment = kwargs.pop('env', None)
@@ -532,13 +536,14 @@ class TradingAlgorithm(object):
             "US/Eastern"
         )
 
-        return MinuteSimulationClock(
-            self.sim_params.sessions,
-            execution_opens,
-            execution_closes,
-            before_trading_start_minutes,
-            minute_emission=minutely_emission,
-        )
+        return None
+        # return MinuteSimulationClock(
+        #     self.sim_params.sessions,
+        #     execution_opens,
+        #     execution_closes,
+        #     before_trading_start_minutes,
+        #     minute_emission=minutely_emission,
+        # )
 
     def _create_benchmark_source(self):
         if self.benchmark_sid is not None:
@@ -583,7 +588,8 @@ class TradingAlgorithm(object):
             self,
             sim_params,
             self.data_portal,
-            self._create_clock(),
+            # self._create_clock(),
+            sim_engine2.create_clock(self.clock_file, timezone=self.trading_calendar.tz),
             self._create_benchmark_source(),
             self.restrictions,
             universe_func=self._calculate_universe
