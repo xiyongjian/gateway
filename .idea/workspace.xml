@@ -1,238 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="9263d708-7249-41e3-9ede-bf3a08435990" name="Default" comment="">
-      <change beforePath="" afterPath="$PROJECT_DIR$/test01.py" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change beforePath="$PROJECT_DIR$/gateway/__init__.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/__main__.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/_protocol.pyx" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/_version.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/algorithm.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/api.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/api.pyi" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/assets/__init__.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/assets/_assets.pyx" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/assets/asset_db_migrations.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/assets/asset_db_schema.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/assets/asset_writer.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/assets/assets.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/assets/continuous_futures.pyx" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/assets/futures.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/assets/roll_finder.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/assets/synthetic.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/data/__init__.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/data/_adjustments.pyx" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/data/_equities.pyx" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/data/_minute_bar_internal.pyx" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/data/_resample.pyx" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/data/bar_reader.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/data/benchmarks.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/data/bundles/__init__.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/data/bundles/core.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/data/bundles/csvdir.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/data/bundles/quandl.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/data/continuous_future_reader.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/data/data_portal.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/data/dispatch_bar_reader.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/data/history_loader.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/data/loader.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/data/minute_bars.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/data/resample.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/data/session_bars.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/data/treasuries.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/data/treasuries_can.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/data/us_equity_pricing.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/dispatch.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/errors.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/examples/__init__.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/examples/buy_and_hold.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/examples/buyapple.ipynb" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/examples/buyapple.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/examples/dual_ema_talib.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/examples/dual_moving_average.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/examples/momentum_pipeline.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/examples/olmar.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/finance/__init__.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/finance/asset_restrictions.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/finance/blotter.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/finance/cancel_policy.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/finance/commission.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/finance/constants.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/finance/controls.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/finance/execution.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/finance/order.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/finance/performance/__init__.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/finance/performance/period.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/finance/performance/position.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/finance/performance/position_tracker.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/finance/performance/tracker.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/finance/risk/__init__.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/finance/risk/cumulative.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/finance/risk/period.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/finance/risk/report.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/finance/risk/risk.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/finance/shared.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/finance/slippage.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/finance/trading.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/finance/transaction.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/gateway_warnings.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/gens/__init__.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/gens/composites.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/gens/sim_engine.pyx" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/gens/sim_engine2.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/gens/tradesimulation.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/gens/utils.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/lib/__init__.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/lib/_factorize.pyx" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/lib/_float64window.pyx" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/lib/_int64window.pyx" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/lib/_labelwindow.pyx" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/lib/_uint8window.pyx" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/lib/_windowtemplate.pxi" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/lib/adjusted_array.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/lib/adjustment.pxd" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/lib/adjustment.pyx" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/lib/labelarray.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/lib/normalize.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/lib/quantiles.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/lib/rank.pyx" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/pipeline/__init__.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/pipeline/api_utils.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/pipeline/classifiers/__init__.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/pipeline/classifiers/classifier.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/pipeline/common.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/pipeline/data/__init__.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/pipeline/data/dataset.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/pipeline/data/equity_pricing.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/pipeline/data/testing.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/pipeline/downsample_helpers.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/pipeline/dtypes.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/pipeline/engine.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/pipeline/expression.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/pipeline/factors/__init__.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/pipeline/factors/basic.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/pipeline/factors/events.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/pipeline/factors/factor.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/pipeline/factors/statistical.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/pipeline/factors/technical.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/pipeline/filters/__init__.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/pipeline/filters/filter.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/pipeline/filters/smoothing.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/pipeline/graph.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/pipeline/loaders/__init__.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/pipeline/loaders/base.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/pipeline/loaders/blaze/__init__.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/pipeline/loaders/blaze/_core.pyx" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/pipeline/loaders/blaze/core.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/pipeline/loaders/blaze/estimates.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/pipeline/loaders/blaze/events.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/pipeline/loaders/blaze/utils.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/pipeline/loaders/earnings_estimates.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/pipeline/loaders/equity_pricing_loader.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/pipeline/loaders/events.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/pipeline/loaders/frame.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/pipeline/loaders/synthetic.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/pipeline/loaders/testing.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/pipeline/loaders/utils.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/pipeline/mixins.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/pipeline/pipeline.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/pipeline/sentinels.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/pipeline/term.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/pipeline/visualize.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/protocol.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/resources/market_data/SPY_benchmark.csv" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/resources/market_data/treasury_curves.csv" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/resources/security_lists/leveraged_etf_list/20020103/20120913/add" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/resources/security_lists/leveraged_etf_list/20020103/20120913/delete" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/resources/security_lists/leveraged_etf_list/20020103/20120919/add" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/resources/security_lists/leveraged_etf_list/20020103/20120919/delete" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/resources/security_lists/leveraged_etf_list/20020103/20121012/add" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/resources/security_lists/leveraged_etf_list/20020103/20121012/delete" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/resources/security_lists/leveraged_etf_list/20020103/20130605/add" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/resources/security_lists/leveraged_etf_list/20020103/20130605/delete" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/resources/security_lists/leveraged_etf_list/20020103/20130916/add" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/resources/security_lists/leveraged_etf_list/20020103/20130916/delete" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/resources/security_lists/leveraged_etf_list/20020103/20131002/add" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/resources/security_lists/leveraged_etf_list/20020103/20131002/delete" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/resources/security_lists/leveraged_etf_list/20020103/20131009/add" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/resources/security_lists/leveraged_etf_list/20020103/20131009/delete" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/resources/security_lists/leveraged_etf_list/20020103/20131121/add" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/resources/security_lists/leveraged_etf_list/20020103/20131121/delete" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/resources/security_lists/leveraged_etf_list/20020103/20131227/add" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/resources/security_lists/leveraged_etf_list/20020103/20131227/delete" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/resources/security_lists/leveraged_etf_list/20020103/20140410/add" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/resources/security_lists/leveraged_etf_list/20020103/20140410/delete" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/resources/security_lists/leveraged_etf_list/20020103/20140923/add" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/resources/security_lists/leveraged_etf_list/20020103/20140923/delete" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/resources/security_lists/leveraged_etf_list/20020103/20141119/add" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/resources/security_lists/leveraged_etf_list/20020103/20141119/delete" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/resources/security_lists/leveraged_etf_list/20020103/20141226/add" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/resources/security_lists/leveraged_etf_list/20020103/20141226/delete" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/resources/security_lists/leveraged_etf_list/20020103/20150123/add" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/resources/security_lists/leveraged_etf_list/20020103/20150123/delete" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/resources/security_lists/leveraged_etf_list/20020103/20160826/add" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/resources/security_lists/leveraged_etf_list/20020103/20160826/delete" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/sources/__init__.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/sources/benchmark_source.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/sources/requests_csv.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/sources/test_source.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/test_algorithms.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/testing/__init__.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/testing/core.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/testing/fixtures.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/testing/predicates.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/testing/slippage.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/utils/__init__.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/utils/algo_instance.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/utils/api_support.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/utils/argcheck.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/utils/cache.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/utils/calendars/__init__.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/utils/calendars/_calendar_helpers.pyx" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/utils/calendars/calendar_utils.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/utils/calendars/exchange_calendar_bmf.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/utils/calendars/exchange_calendar_cfe.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/utils/calendars/exchange_calendar_cme.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/utils/calendars/exchange_calendar_ice.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/utils/calendars/exchange_calendar_lse.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/utils/calendars/exchange_calendar_nyse.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/utils/calendars/exchange_calendar_tsx.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/utils/calendars/trading_calendar.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/utils/calendars/us_futures_calendar.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/utils/calendars/us_holidays.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/utils/classproperty.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/utils/cli.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/utils/compat.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/utils/context_tricks.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/utils/data.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/utils/date_utils.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/utils/deprecate.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/utils/dummy.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/utils/enum.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/utils/events.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/utils/factory.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/utils/final.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/utils/functional.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/utils/input_validation.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/utils/math_utils.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/utils/memoize.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/utils/metautils.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/utils/numpy_utils.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/utils/pandas_utils.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/utils/paths.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/utils/pool.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/utils/preprocess.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/utils/range.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/utils/run_algo.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/utils/security_list.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/utils/sentinel.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/utils/serialization_utils.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/utils/sharedoc.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/utils/simfactory.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/utils/sqlite_utils.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gateway/utils/tradingcalendar.py" afterPath="" />
-    </list>
+    <list default="true" id="9263d708-7249-41e3-9ede-bf3a08435990" name="Default" comment="" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -256,7 +25,7 @@
         <entry file="file://$PROJECT_DIR$/test01.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="88">
-              <caret line="4" column="0" lean-forward="false" selection-start-line="4" selection-start-column="0" selection-end-line="4" selection-end-column="0" />
+              <caret line="4" column="0" lean-forward="true" selection-start-line="4" selection-start-column="0" selection-end-line="4" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -322,7 +91,15 @@
     </panes>
   </component>
   <component name="PropertiesComponent">
-    <property name="settings.editor.selected.configurable" value="reference.settingsdialog.IDE.editor.colors.Python" />
+    <property name="settings.editor.selected.configurable" value="configurable.group.build" />
+  </component>
+  <component name="PyConsoleOptionsProvider">
+    <option name="myPythonConsoleState">
+      <console-settings module-name="gateway2" is-module-sdk="true">
+        <option name="myUseModuleSdk" value="true" />
+        <option name="myModuleName" value="gateway2" />
+      </console-settings>
+    </option>
   </component>
   <component name="RunDashboard">
     <option name="ruleStates">
@@ -401,7 +178,7 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-5" y="-5" width="1450" height="910" extended-state="7" />
+    <frame x="-5" y="-5" width="1450" height="910" extended-state="6" />
     <editor active="true" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.24930556" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
@@ -415,12 +192,22 @@
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.39920425" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.3296433" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.24930556" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.39920425" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
   <component name="VcsContentAnnotationSettings">
@@ -583,7 +370,68 @@
     <entry file="file://$PROJECT_DIR$/test01.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="88">
-          <caret line="4" column="0" lean-forward="false" selection-start-line="4" selection-start-column="0" selection-end-line="4" selection-end-column="0" />
+          <caret line="4" column="0" lean-forward="true" selection-start-line="4" selection-start-column="0" selection-end-line="4" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app01.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="110">
+          <caret line="5" column="0" lean-forward="false" selection-start-line="5" selection-start-column="0" selection-end-line="5" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/gateway/utils/calendars/trading_calendar.py" />
+    <entry file="file://$PROJECT_DIR$/app01.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="110">
+          <caret line="5" column="0" lean-forward="false" selection-start-line="5" selection-start-column="0" selection-end-line="5" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/gateway/utils/calendars/trading_calendar.py" />
+    <entry file="file://$PROJECT_DIR$/app01.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="110">
+          <caret line="5" column="0" lean-forward="false" selection-start-line="5" selection-start-column="0" selection-end-line="5" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/gateway/utils/calendars/trading_calendar.py" />
+    <entry file="file://$PROJECT_DIR$/gateway/gens/sim_engine.pyx" />
+    <entry file="file://$PROJECT_DIR$/gateway/gens/sim_engine2.py" />
+    <entry file="file://$PROJECT_DIR$/gateway/algorithm.py" />
+    <entry file="file://$PROJECT_DIR$/gateway/finance/risk/cumulative.py" />
+    <entry file="file://$PROJECT_DIR$/gateway/gens/__init__.py" />
+    <entry file="file://$PROJECT_DIR$/gateway/gens/tradesimulation.py" />
+    <entry file="file://$PROJECT_DIR$/gateway/utils/calendars/__init__.py" />
+    <entry file="file://$APPLICATION_HOME_DIR$/helpers/pydev/pydevd.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="126">
+          <caret line="1661" column="0" lean-forward="false" selection-start-line="1661" selection-start-column="0" selection-end-line="1661" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/gateway/__init__.py" />
+    <entry file="file://$PROJECT_DIR$/gateway/data/__init__.py" />
+    <entry file="file://$PROJECT_DIR$/app01.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="110">
+          <caret line="5" column="0" lean-forward="false" selection-start-line="5" selection-start-column="0" selection-end-line="5" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/gateway/utils/calendars/_calendar_helpers.pyx" />
+    <entry file="file://$PROJECT_DIR$/gateway/utils/calendars/trading_calendar.py" />
+    <entry file="file://$PROJECT_DIR$/test01.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="88">
+          <caret line="4" column="0" lean-forward="true" selection-start-line="4" selection-start-column="0" selection-end-line="4" selection-end-column="0" />
           <folding />
         </state>
       </provider>
