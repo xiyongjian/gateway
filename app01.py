@@ -10,7 +10,8 @@ from gateway.api import (order, symbol)
 import numpy as np
 import re
 
-from cn_calendar.gateway.exchange_calendar_shsz import SHSZExchangeCalendar
+# from cn_calendar.gateway.exchange_calendar_shsz import SHSZExchangeCalendar
+from cn_stock_holidays.gateway.exchange_calendar_shsz import SHSZExchangeCalendar
 
 import sys
 import logbook
