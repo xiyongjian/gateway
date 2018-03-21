@@ -4,8 +4,9 @@ tk initial commit code change
 switch project name to 'gateway'
 
 setup env variable : PYTHONPATH
-add 'python setup.py -v build' for cn_stock_holidy and gateway path
-e:\Users\xyj\PycharmProjects\gateway2\gateway\build\lib.win-amd64-3.5\
+add 'python setup.py -v build' for cn_stock_holidy and gateway path (with '\' at end!)
+
+PYTHONPATH=e:\Users\xyj\PycharmProjects\gateway2\gateway\build\lib.win-amd64-3.5\;e:\Users\xyj\PycharmProjects\gateway2\cn_stock_holidays\build\lib\
 
 add file :
     data.py
