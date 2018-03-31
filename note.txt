@@ -313,6 +313,10 @@ http://landinghub.visualstudio.com/visual-cpp-build-tools
 conda create -n gateway -c Quantopian --file req.txt
 
 --------------------------------------------------------
+conda windows shortcut setup
+target
+%windir%\System32\cmd.exe "/K" E:\ProgramData\Anaconda3\Scripts\activate.bat E:\ProgramData\Anaconda3
+
 --------------------------------------------------------
 --------------------------------------------------------
 --------------------------------------------------------
