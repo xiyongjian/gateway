@@ -310,6 +310,8 @@ conda install --verbose --offline alembic-0.7.7-py35_0.tar.bz2 asn1crypto-0.24.0
 install windows/microsoft visual C++ v14
 http://landinghub.visualstudio.com/visual-cpp-build-tools
 
+conda create -n gateway -c Quantopian --file req.txt
+
 --------------------------------------------------------
 --------------------------------------------------------
 --------------------------------------------------------
