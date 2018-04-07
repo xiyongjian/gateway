@@ -312,6 +312,11 @@ http://landinghub.visualstudio.com/visual-cpp-build-tools
 
 conda create -n gateway -c Quantopian --file req.txt
 
+git checkout gateway2 from github
+in gateway/cn_stock_holidays folder, run
+    python setup.py install
+to install above two package
+
 --------------------------------------------------------
 conda windows shortcut setup
 target
