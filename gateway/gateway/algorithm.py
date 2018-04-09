@@ -270,7 +270,10 @@ class TradingAlgorithm(object):
 
         self.data_portal = kwargs.pop('data_portal', None)
 
+        # setup for clock creation
         self.clock_file = kwargs.pop('clock_file', None)
+        self.clock_dt_index = kwargs.pop('clock_dt_index', None)
+        self.clock_spots = kwargs.pop('clock_spots', None)
 
         # If an env has been provided, pop it
         self.trading_environment = kwargs.pop('env', None)
@@ -589,7 +592,11 @@ class TradingAlgorithm(object):
             sim_params,
             self.data_portal,
             # self._create_clock(),
-            sim_engine2.create_clock(self.clock_file, timezone=self.trading_calendar.tz),
+            # sim_engine2.create_clock(self.clock_file, timezone=self.trading_calendar.tz),
+            sim_engine2.create_sim_clock(clock_file=self.clock_file,
+                                         datetime_index=self.clock_dt_index,
+                                         spots=self.clock_spots,
+                                         timezone=self.trading_calendar.tz),
             self._create_benchmark_source(),
             self.restrictions,
             universe_func=self._calculate_universe

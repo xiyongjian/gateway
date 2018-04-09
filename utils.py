@@ -1,5 +1,7 @@
 '''
 utilities for misc operation
+
+todo : move testing code to utils_test.py
 '''
 
 import pandas as pd
@@ -44,17 +46,11 @@ def create_data_panel(dt_from, dt_to) :
     panel = pd.Panel(data)
     return panel
 
-if __name__ == '__main__' :
-    handler = logbook.StreamHandler(sys.stdout, level=logbook.DEBUG)
-    handler.formatter.format_string = '{record.time}|{record.level_name}|{record.module}|{record.func_name}|{record.lineno}|{record.message}'
-    handler.push_application()
-    log = logbook.Logger("utils.py testing")
-
-    # test01();
-
+def test_create_data_panel() :
     panel = create_data_panel("2018-04-03 09:32:00", "2018-04-03 09:45:00")
     log.info('panel items (codes) : ' + str(panel.items))
     log.info('panel major axis : ' + str(panel.major_axis))
+    log.info('panel major axis type: ' + str(type(panel.major_axis)))
     if False :
         log.info('panel major axis : ' + panel.major_axis)
         log.info('panel minor axis : ' + panel.minor_axis)
@@ -67,4 +63,18 @@ if __name__ == '__main__' :
     df = panel.get('600026.SH')
     log.info('600026.SH data frame : ' + str(df))
 
+    log.info('type of items : ' + str(type(panel.items)))
+    stocks = list(panel.items)
+    log.info('type of list items : ' + str(type(stocks)))
+    log.info('type of stocks : ' + str(stocks))
+    log.info('type of major axis : ' + str(type(panel.major_axis)))
+
     log.info("done")
+
+if __name__ == '__main__' :
+    handler = logbook.StreamHandler(sys.stdout, level=logbook.DEBUG)
+    handler.formatter.format_string = '{record.time}|{record.level_name}|{record.module}|{record.func_name}|{record.lineno}|{record.message}'
+    handler.push_application()
+    log = logbook.Logger("utils.py testing")
+
+    test_create_data_panel()

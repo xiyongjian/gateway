@@ -3,7 +3,7 @@ import pandas as pd
 import numpy as np
 from collections import OrderedDict
 
-if __name__ == '__main__' :
+def test01() :
     print('this test demo panel creation, and the major index will be sorted automatcially')
     data = OrderedDict()
 
@@ -25,3 +25,22 @@ if __name__ == '__main__' :
     print(panel.get('second'))
 
     pass
+
+def test02() :
+    timeindex = pd.DatetimeIndex(start='2018-04-03 12:12:00',
+                                 periods=10,
+                                 freq='60S')
+    print("timeindex : ", timeindex)
+
+    ps = pd.Series(timeindex)
+    print("sereis : ", ps)
+
+    for t in timeindex :
+        print("timeindex item : ", t)
+
+    for t in ps :
+        print("series item : ", t)
+
+if __name__ == '__main__' :
+    # test01()
+    test02()

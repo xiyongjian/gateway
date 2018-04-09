@@ -57,12 +57,17 @@ if __name__=="__main__":
         THS_HighFrequenceSequence(
             '600028.SH,600029.SH,600030.SH,600031.SH,600033.SH,600035.SH,600036.SH,600037.SH,600038.SH,600039.SH,600048.SH,600050.SH',
             'open;high;low;close;avgPrice;volume;amount;change;changeRatio;turnoverRatio;sellVolume;buyVolume;buyAmount;sellAmount',
-            'CPS:0,MaxPoints:50000,Fill:Previous,Interval:1', '2018-04-03 09:15:00', '2018-04-03 15:15:00')
+            'CPS:0,MaxPoints:500000,Fill:Previous,Interval:1', '2018-04-03 09:15:00', '2018-04-03 15:15:00')
 
     codes = '600028.SH,600029.SH,600030.SH,600031.SH,600033.SH,600035.SH,600036.SH,600037.SH,600038.SH,600039.SH,600048.SH,600050.SH'
-    codes = '600026.SH,600027.SH'
+    # codes = '600026.SH,600027.SH'
+    # codes = '600030.SH,600031.SH'
+    # codes = '600033.SH,600035.SH'
+    # codes = '600036.SH,600037.SH'
+    # codes = '600038.SH,600039.SH'
+    # codes = '600048.SH,600050.SH'
     dt_from = '2018-04-03 09:15:00'
-    dt_to = '2018-04-03 15:15:00'
+    dt_to = '2018-04-04 15:15:00'
     data = download_1min(codes, dt_from, dt_to)
 
     print(data.info());

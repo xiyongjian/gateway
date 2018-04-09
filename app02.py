@@ -15,6 +15,10 @@ from cn_stock_holidays.gateway.exchange_calendar_shsz import SHSZExchangeCalenda
 
 import sys
 import logbook
+
+# local import
+import utils
+
 # logging setup
 if True :
     handler = logbook.StreamHandler(sys.stdout, level=logbook.DEBUG)
@@ -65,9 +69,6 @@ def handle_data(context, bar_data):
 if __name__ == '__main__' :
     log.info("app01, main, entering")
 
-    log.info('load data')
-    data = OrderedDict()
-
     ## replace this part with database retrieving
     #  table : clock       sn (1,2,3,4....., integer), datetime (minute)
     #  select from clock and write to data/clock.csv (to generate clock)
@@ -76,24 +77,21 @@ if __name__ == '__main__' :
     #       select * from stockdata where minute in (select minute from clock)
     #           order by code, minute
     #
-    for s in stocks :
-        log.info("loading stock %s"%s)
-        df = pd.read_csv('data/%s.SH.csv'%(s), index_col='time', parse_dates=['time'])
-        df.rename(columns={'time' : 'date'}, inplace=True)
-        df['test'] = [i for i in range(len(df.index))]
-        log.info(df.columns)
-        log.info(df.head(5))
-        log.info(df.index)
-        data[s] = df
+    log.info('load panel')
+    panel = utils.create_data_panel("2018-04-03 09:20:00", "2018-04-04 09:45:00")
+    datetime_index = panel.major_axis
 
-    panel = pd.Panel(data)
+    global stocks
+    stocks = list(panel.items)
+    log.info("setup stocks list : " + str(stocks))
 
     cn_cal = SHSZExchangeCalendar()
     panel.major_axis = panel.major_axis.tz_localize(cn_cal.tz)
     algo_obj = TradingAlgorithm(initialize=initialize, handle_data=handle_data,
                                 trading_calendar = cn_cal,
                                 data_frequency = 'minute',
-                                clock_file = "data/clock.csv")
+                                clock_dt_index=datetime_index)
+    # clock_file = "data/clock.csv")
 
     log.info('run algorithm')
     perf_manual = algo_obj.run(panel)
