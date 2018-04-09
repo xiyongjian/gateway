@@ -298,8 +298,10 @@ vs2015_runtime=14.0.25123=3
 wheel=0.30.0=py35h38a90bc_1
 win_inet_pton=1.0.1=py35hbef1270_1
 wincertstore=0.2=py35hfebbdb8_0
-zipline=1.1.1=np111py35_0
 zlib=1.2.11=vc14h1cdd9ab_1
+
+-- remove this one
+zipline=1.1.1=np111py35_0
 
 install env manually
 conda create -n <xx> --no-default-packages
@@ -323,6 +325,56 @@ target
 %windir%\System32\cmd.exe "/K" E:\ProgramData\Anaconda3\Scripts\activate.bat E:\ProgramData\Anaconda3
 
 --------------------------------------------------------
+tk database table structure
+Data Field Name
+
+drop table stockdata;
+create table stockdata (
+    minute datetime,
+    code varchar(16),
+    tradeDate datetime,
+    open_ float,
+    high float,
+    low float,
+    close float,
+    avgPrice float,
+    volume float,
+    amount float,
+    change_ float,
+    changeRatio float,
+    turnoverRatio float,
+    sellVolume float,
+    sellAmount float,
+    buyVolume float,
+    buyAmount float,
+    suspensionFlag varchar(8),
+    tradeStatus varchar(8),
+    primary key(minute, code)
+);
+
+
+drop table stockdata_stage;
+create table stockdata_stage (
+    minute datetime,
+    code varchar(16),
+    tradeDate datetime,
+    open_ float,
+    high float,
+    low float,
+    close float,
+    avgPrice float,
+    volume float,
+    amount float,
+    change_ float,
+    changeRatio float,
+    turnoverRatio float,
+    sellVolume float,
+    sellAmount float,
+    buyVolume float,
+    buyAmount float,
+    suspensionFlag varchar(8),
+    tradeStatus varchar(8)
+);
 --------------------------------------------------------
 --------------------------------------------------------
 --------------------------------------------------------

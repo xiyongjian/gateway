@@ -23,7 +23,7 @@ if True :
     # or using this : with handler.applicationbound():
     log = logbook.Logger("app01")
 
-if True:    # hacking for url missing
+if False:    # hacking for url missing
     from pandas_datareader.google.daily import GoogleDailyReader
     @property
     def url(self):
@@ -58,6 +58,14 @@ if __name__ == '__main__' :
     log.info('load data')
     data = OrderedDict()
 
+    ## replace this part with database retrieving
+    #  table : clock       sn (1,2,3,4....., integer), datetime (minute)
+    #  select from clock and write to data/clock.csv (to generate clock)
+    #       select id, minute from clock
+    # select from stockdata,
+    #       select * from stockdata where minute in (select minute from clock)
+    #           order by code, minute
+    #
     for s in stocks :
         log.info("loading stock %s"%s)
         df = pd.read_csv('data/%s.SH.csv'%(s), index_col='time', parse_dates=['time'])
