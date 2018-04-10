@@ -375,7 +375,21 @@ create table stockdata_stage (
     suspensionFlag varchar(8),
     tradeStatus varchar(8)
 );
+
 --------------------------------------------------------
+tk mysql mariadb
+setup database :
+mysql_install_db -d <data_path>
+
+setup my.ini (in windows)
+mysqld --defaults-file=<path.to.my.ini> --console
+
+client :
+mysql -u root -p -h ... --protocol tcp
+or just
+mysql -u root
+
+setup root's password as password and new user ths/ths, one
 --------------------------------------------------------
 --------------------------------------------------------
 --------------------------------------------------------

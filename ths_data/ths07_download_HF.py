@@ -76,7 +76,10 @@ if __name__=="__main__":
 
     THS_iFinDLogout()
 
-    engine = create_engine("mysql+mysqlconnector://ths:ths@127.0.0.1:3306/test");
+    from .. import config
+    log.info("create db connection to " + config.config['db_url'])
+    engine = create_engine(config.config['db_url'])
+    # engine = create_engine("mysql+mysqlconnector://ths:ths@127.0.0.1:3306/test");
     data.rename(columns={'thscode': 'code', 'time': 'minute', 'open': 'open_', 'change': 'change_'}, inplace=True)
     data.to_sql(name='stockdata_stage', con=engine, if_exists='append', index=False)
 
