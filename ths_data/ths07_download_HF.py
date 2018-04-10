@@ -45,9 +45,16 @@ def download_1min(code, dt_from, dt_to) :
 
     return data
 
+import sys
+sys.path.append('..')
+# from config import config
+import config
+
 if __name__=="__main__":
     print("THS login")
-    THS_iFinDLogin("sissi008","677085")
+    print("try to use db connection " + config.config['db_url'])
+    ret = THS_iFinDLogin("sissi008","677085")
+    print("ths login return : " + str(ret))
 
     if False :
         codes = '600026.SH,600027.SH'
@@ -65,7 +72,7 @@ if __name__=="__main__":
     # codes = '600033.SH,600035.SH'
     # codes = '600036.SH,600037.SH'
     # codes = '600038.SH,600039.SH'
-    # codes = '600048.SH,600050.SH'
+    codes = '600048.SH,600050.SH'
     dt_from = '2018-04-03 09:15:00'
     dt_to = '2018-04-04 15:15:00'
     data = download_1min(codes, dt_from, dt_to)
@@ -75,9 +82,9 @@ if __name__=="__main__":
     print("time length :", len(data['time']))
 
     THS_iFinDLogout()
+    print("ths logout")
 
-    from .. import config
-    log.info("create db connection to " + config.config['db_url'])
+    print("create db connection to " + config.config['db_url'])
     engine = create_engine(config.config['db_url'])
     # engine = create_engine("mysql+mysqlconnector://ths:ths@127.0.0.1:3306/test");
     data.rename(columns={'thscode': 'code', 'time': 'minute', 'open': 'open_', 'change': 'change_'}, inplace=True)

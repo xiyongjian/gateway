@@ -319,6 +319,8 @@ in gateway/cn_stock_holidays folder, run
     python setup.py install
 to install above two package
 
+conda install  mysql-connector-python
+
 --------------------------------------------------------
 conda windows shortcut setup
 target
