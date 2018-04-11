@@ -16,6 +16,11 @@ import traceback
 
 from sqlalchemy import create_engine
 
+import sys
+sys.path.append('..')
+# from config import config
+import config
+
 
 if False :
     THS_HighFrequenceSequence('600026.SH,600027.SH',
@@ -23,6 +28,7 @@ if False :
                           'CPS:0,MaxPoints:50000,Fill:Previous,Interval:1',
                           '2018-04-03 09:15:00',
                           '2018-04-03 10:15:00')
+
 
 def download_1min(code, dt_from, dt_to) :
     columns = 'open;high;low;close;avgPrice;volume;amount;change;changeRatio;turnoverRatio;sellVolume;buyVolume;buyAmount;sellAmount'
@@ -45,10 +51,31 @@ def download_1min(code, dt_from, dt_to) :
 
     return data
 
-import sys
-sys.path.append('..')
-# from config import config
-import config
+
+def load_data(codes, dt_from, dt_to) :
+    print("load_data codes : " + codes)
+    print("load_data dt_from : " + dt_from)
+    print("load_data dt_to : " + dt_to)
+
+    data = download_1min(codes, dt_from, dt_to)
+
+    print(data.info());
+    # print(data)
+    print("time length :", len(data['time']))
+
+    print("create db connection to " + config.config['db_url'])
+    engine = create_engine(config.config['db_url'])
+    # engine = create_engine("mysql+mysqlconnector://ths:ths@127.0.0.1:3306/test");
+    data.rename(columns={'thscode': 'code', 'time': 'minute', 'open': 'open_', 'change': 'change_'}, inplace=True)
+    data.to_sql(name='stockdata_stage', con=engine, if_exists='append', index=False)
+
+    connection = engine.connect()
+    result = connection.execute("replace into stockdata select * from stockdata_stage")
+    print("replace into, return : ")
+
+    print("clean stage table")
+    result = connection.execute("delete from stockdata_stage")
+
 
 if __name__=="__main__":
     print("THS login")
@@ -67,34 +94,50 @@ if __name__=="__main__":
             'CPS:0,MaxPoints:500000,Fill:Previous,Interval:1', '2018-04-03 09:15:00', '2018-04-03 15:15:00')
 
     codes = '600028.SH,600029.SH,600030.SH,600031.SH,600033.SH,600035.SH,600036.SH,600037.SH,600038.SH,600039.SH,600048.SH,600050.SH'
-    # codes = '600026.SH,600027.SH'
-    # codes = '600030.SH,600031.SH'
-    # codes = '600033.SH,600035.SH'
-    # codes = '600036.SH,600037.SH'
-    # codes = '600038.SH,600039.SH'
-    codes = '600048.SH,600050.SH'
+
     dt_from = '2018-04-03 09:15:00'
     dt_to = '2018-04-04 15:15:00'
-    data = download_1min(codes, dt_from, dt_to)
 
-    print(data.info());
-    # print(data)
-    print("time length :", len(data['time']))
+    codes = '600026.SH,600027.SH'
+    load_data(codes, dt_from, dt_to)
+
+    codes = '600030.SH,600031.SH'
+    load_data(codes, dt_from, dt_to)
+
+    codes = '600033.SH,600035.SH'
+    load_data(codes, dt_from, dt_to)
+
+    codes = '600036.SH,600037.SH'
+    load_data(codes, dt_from, dt_to)
+
+    codes = '600038.SH,600039.SH'
+    load_data(codes, dt_from, dt_to)
+
+    codes = '600048.SH,600050.SH'
+    load_data(codes, dt_from, dt_to)
+    if False :
+        data = download_1min(codes, dt_from, dt_to)
+
+        print(data.info());
+        # print(data)
+        print("time length :", len(data['time']))
+
+        THS_iFinDLogout()
+        print("ths logout")
+
+        print("create db connection to " + config.config['db_url'])
+        engine = create_engine(config.config['db_url'])
+        # engine = create_engine("mysql+mysqlconnector://ths:ths@127.0.0.1:3306/test");
+        data.rename(columns={'thscode': 'code', 'time': 'minute', 'open': 'open_', 'change': 'change_'}, inplace=True)
+        data.to_sql(name='stockdata_stage', con=engine, if_exists='append', index=False)
+
+        connection = engine.connect()
+        result = connection.execute("replace into stockdata select * from stockdata_stage")
+        print("replace into, return : " )
+
+        print("clean stage table")
+        result = connection.execute("delete from stockdata_stage")
 
     THS_iFinDLogout()
     print("ths logout")
-
-    print("create db connection to " + config.config['db_url'])
-    engine = create_engine(config.config['db_url'])
-    # engine = create_engine("mysql+mysqlconnector://ths:ths@127.0.0.1:3306/test");
-    data.rename(columns={'thscode': 'code', 'time': 'minute', 'open': 'open_', 'change': 'change_'}, inplace=True)
-    data.to_sql(name='stockdata_stage', con=engine, if_exists='append', index=False)
-
-    connection = engine.connect()
-    result = connection.execute("replace into stockdata select * from stockdata_stage")
-    print("replace into, return : " )
-
-    print("clean stage table")
-    result = connection.execute("delete from stockdata_stage")
-
     print("done.")

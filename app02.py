@@ -78,7 +78,8 @@ if __name__ == '__main__' :
     #           order by code, minute
     #
     log.info('load panel')
-    panel = utils.create_data_panel("2018-04-03 09:20:00", "2018-04-04 09:45:00")
+    # !! must span > 1 days!!, otherwise got error !!
+    panel = utils.create_data_panel("2018-04-03 09:30:00", "2018-04-04 09:31:00")
     datetime_index = panel.major_axis
 
     global stocks
