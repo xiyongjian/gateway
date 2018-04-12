@@ -24,3 +24,6 @@ s = '{"errorcode":0,"errmsg":"","tables":[{"table":{"tradeDate":["2018-03-22"],"
 
 j = json.loads(s)
 print(json.dumps(j, indent = 4))
+
+l = ['a', 'b', 'c']
+print('join three elements', ','.join(l))

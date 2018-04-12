@@ -392,7 +392,40 @@ or just
 mysql -u root
 
 setup root's password as password and new user ths/ths, one
+
 --------------------------------------------------------
+tk download structure
+download realtime(RT) and high frequency(HF) data.
+
+control/config file
+db/table jdbc info
+columns list
+codes list
+from, to date, hh:mm:00
+
+build in list : codes
+build in columns : columns, RT_columns, HF_columns
+command line :  <from> <to>
+    dt_from = '2018-04-11 09:30:00'
+    dt_to = '2018-04-11 15:00:00'
+
+codes download one by one
+
+worker command line : load_data_RT/HF(codes, from, to)
+driver :
+
+load_RT : realtime, always current minutes, from java code
+
+load_HF from to
+load_HF -i hf01.txt  -> hf01.txt.status
+hf01.txt
+from
+to
+code1
+code2
+
+
+
 --------------------------------------------------------
 --------------------------------------------------------
 --------------------------------------------------------

@@ -78,9 +78,11 @@ def load_data(codes, dt_from, dt_to) :
 
 
 if __name__=="__main__":
-    print("THS login")
     print("try to use db connection " + config.config['db_url'])
-    ret = THS_iFinDLogin("sissi008","677085")
+    print("THS login")
+    # ret = THS_iFinDLogin("sissi008","677085")
+    # ret = THS_iFinDLogin("qhfh001","429742")
+    ret = THS_iFinDLogin("qhfh002","891111")
     print("ths login return : " + str(ret))
 
     if False :
@@ -93,28 +95,32 @@ if __name__=="__main__":
             'open;high;low;close;avgPrice;volume;amount;change;changeRatio;turnoverRatio;sellVolume;buyVolume;buyAmount;sellAmount',
             'CPS:0,MaxPoints:500000,Fill:Previous,Interval:1', '2018-04-03 09:15:00', '2018-04-03 15:15:00')
 
-    codes = '600028.SH,600029.SH,600030.SH,600031.SH,600033.SH,600035.SH,600036.SH,600037.SH,600038.SH,600039.SH,600048.SH,600050.SH'
+    dt_from = '2018-04-11 09:30:00'
+    dt_to = '2018-04-11 15:00:00'
 
-    dt_from = '2018-04-03 09:15:00'
-    dt_to = '2018-04-04 15:15:00'
+    if True :
+        codes = '600028.SH,600029.SH,600030.SH,600031.SH,600033.SH,600035.SH,600036.SH,600037.SH,600038.SH,600039.SH,600048.SH,600050.SH'
+        load_data(codes, dt_from, dt_to)
 
-    codes = '600026.SH,600027.SH'
-    load_data(codes, dt_from, dt_to)
+    if False :
+        codes = '600026.SH,600027.SH'
+        load_data(codes, dt_from, dt_to)
 
-    codes = '600030.SH,600031.SH'
-    load_data(codes, dt_from, dt_to)
+        codes = '600030.SH,600031.SH'
+        load_data(codes, dt_from, dt_to)
 
-    codes = '600033.SH,600035.SH'
-    load_data(codes, dt_from, dt_to)
+        codes = '600033.SH,600035.SH'
+        load_data(codes, dt_from, dt_to)
 
-    codes = '600036.SH,600037.SH'
-    load_data(codes, dt_from, dt_to)
+        codes = '600036.SH,600037.SH'
+        load_data(codes, dt_from, dt_to)
 
-    codes = '600038.SH,600039.SH'
-    load_data(codes, dt_from, dt_to)
+        codes = '600038.SH,600039.SH'
+        load_data(codes, dt_from, dt_to)
 
-    codes = '600048.SH,600050.SH'
-    load_data(codes, dt_from, dt_to)
+        codes = '600048.SH,600050.SH'
+        load_data(codes, dt_from, dt_to)
+
     if False :
         data = download_1min(codes, dt_from, dt_to)
 
