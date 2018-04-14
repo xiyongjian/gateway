@@ -563,7 +563,7 @@ def build_todo_list(todo_file, day_stat, day_end) :
                 log.info("total %d batches to run"%num_of_batches)
                 for i in range(num_of_batches) :
                     log.info("batch, code %d -> %d"%(i*batch_size, (i+1)*batch_size))
-                    pcode = 'load_data(WORKER_ID, "%s 09:30:00", "%s 15:00:00", "%s", "%s"'% \
+                    pcode = 'load_data(WORKER_ID, "%s 09:30:00", "%s 15:00:00", "%s", "%s")'% \
                             (day_string, day_string, ",".join(all_codes[i*batch_size : (i+1)*batch_size]), HF_columns)
                     log.info("python code : " + pcode)
                     fp.write(pcode + "\n");
@@ -614,6 +614,52 @@ def worker_dummy(worker_id, q_todos, q_status) :
     log.info("THS logout")
     pass
 
+
+def worker(worker_id, q_todos, q_status) :
+    worker_name = "worker%d"%worker_id
+    log.info("THS login")
+    log.info('THS_iFinDLogin(%s, %s)'%(_users[worker_id], _passwords[worker_id]))
+    ret = THS_iFinDLogin(_users[worker_id], _passwords[worker_id])
+    log.info("ths login return : " + str(ret))
+    if ret != 0 :
+        raise Exception('login failed')
+
+    log.info("%s started"%worker_name)
+    while not q_todos.empty() :
+        todo = None
+        try :
+            todo = q_todos.get_nowait()
+        except :
+            log.info("get todo, error: %s"%str(sys.exc_info()[0]))
+
+        if todo is not None :    # process it
+            line_no = todo[0]
+            pcode = todo[1]
+            log.info("loading, line_no %d, python code %s"%(line_no, pcode))
+            try :
+                log.info("run pcode")
+                exec(pcode.replace("WORKER_ID", str(worker_id)))
+                log.info("put done into status queue")
+                q_status.put([line_no, "done"])
+            except :
+                log.info("load data, error: %s"%str(sys.exc_info()[0]))
+                log.info("traceback:" + str(traceback.format_exc()))
+                log.info("put failed into status queue")
+                q_status.put([line_no, "failed"])
+
+            log.info("status queue size : %r"%q_status.qsize())
+
+        if False :
+            import time as t
+            t.sleep(0.5)   # sleep 0.5 second
+
+    log.info("%s end"%worker_name)
+
+    THS_iFinDLogout()
+    log.info("ths logout")
+    log.info("done.")
+    pass
+
 def load_todo_list(todo_file, status_file) :
     log.info("load %s, status %s"%(todo_file, status_file))
     log.info("current patah : " + os.getcwd())
@@ -622,36 +668,41 @@ def load_todo_list(todo_file, status_file) :
     q_todos = Queue()
     q_status = Queue()
 
-    log.info("put all pcode to q_todo")
+    log.info("put all pcode(not done) to q_todo")
 
     dones = set()
     with open(status_file) as fp:
         for line in fp :
             if "done" in line :
                 line_no = int(line.split()[0])
-                log.info("this line is done : %d"%line_no)
+                # log.info("this line is done : %d"%line_no)
                 dones.add(line_no)
+    log.info("total %d lines are done"%len(dones))
 
+    todos = []
     with open(todo_file) as fp:
         line_no = 0
         for line in fp :
             if line_no in dones :
-                log.info("%d done, skip"%(line_no))
+                pass # log.info("%d done, skip"%(line_no))
             else :
-                log.info("put to q_todos : [%d '%s']"%(line_no, line[:-1]))
-                q_todos.put([line_no, line[:-1]])
+                todos.append([line_no, line[:-1]])
             line_no += 1;
-    log.info("q_todos's size : %d"%q_todos.qsize())
+    log.info("todos's size : %d, from %d lines"%(len(todos), line_no))
+
+    for t in reversed(todos) :
+        q_todos.put(t)
+    log.info("qeueu todos's size : %d"%(q_todos.qsize()))
 
     log.info("start two worker")
-    w0 = Process(target=worker_dummy, args=(0, q_todos, q_status))
-    w1 = Process(target=worker_dummy, args=(1, q_todos, q_status))
+    w0 = Process(target=worker, args=(0, q_todos, q_status))
+    w1 = Process(target=worker, args=(1, q_todos, q_status))
     w0.start()
     w1.start()
 
     import time as t
     while True :
-        log.info("try to join w0 and w1, 5 + 5 seconds")
+        log.info("try to join w0 and w1, 0.5 + 0.5 seconds")
         w0.join(0.5)
         w1.join(0.5)
         log.info("current status, w0 alive %r, w1 alive %r, status queue empty %r"%(w0.is_alive(), w1.is_alive(), q_status.empty()))
@@ -666,7 +717,7 @@ def load_todo_list(todo_file, status_file) :
                     log.info("get status : %r"%status)
                     fp.write("%d %s\n"%(status[0], status[1]))
                 except :
-                    log.info("errror on get status: %s"%str(sys.exc_info()[0]))
+                    log.info("NO status valid, pass: %s"%str(sys.exc_info()[0]))
                     break
 
         import time as t
