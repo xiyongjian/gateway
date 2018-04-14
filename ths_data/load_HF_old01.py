@@ -509,7 +509,7 @@ def download_HF(codes, columns, dt_from, dt_to) :
 
 # worker_id 0/1, related to THS login account and staging table 0/1
 # codes is string "21,232,24,2,sdfs"
-def load_data(worker_id, dt_from, dt_to, codes, columns) :
+def load_data(worker_id, codes, columns, dt_from, dt_to) :
     log.info("load_data worker_id : %d"%worker_id)
     log.info("load_data codes #: %d"%len(codes.split(",")))
     log.info("load_data columns # : %d"%len(columns.split(';')))
@@ -547,28 +547,47 @@ def load_data(worker_id, dt_from, dt_to, codes, columns) :
     engine.dispose()
 
 def app01() :
+    if False :
+        parser = argparse.ArgumentParser(description='load historic data.')
+        parser.add_argument('-f', dest='fmt_file', help='file define download task')
+        parser.add_argument('-t', dest='task_file', help='file define download task')
+        parser.add_argument('-s', dest='status_file', help='file to record status of working process')
+        result = parser.parse_args('-h'.split())
+        log.info('result : ' + str(result))
+
+        result = parser.parse_args('-f Y'.split())
+        log.info('result : ' + str(result))
+        log.info('task_file :' + result.task_file)
+
+        # read file load_HF.conf, -> load_HF.status
+
+    log.info("THS login")
+    # ret = THS_iFinDLogin("sissi008","677085")
+    # ret = THS_iFinDLogin("qhfh001","429742")
+    log.info('THS_iFinDLogin("qhfh002","891111")')
+    ret = THS_iFinDLogin("qhfh002","891111")
+    log.info("ths login return : " + str(ret))
+    if ret != 0 :
+        raise Exception('login failed')
+
+    # for 04-03
+    dt_from = '2018-04-03 09:30:00'
+    dt_to = '2018-04-03 15:00:00'
+
+    log.info("total codes # : %d"%len(all_codes))
+
+    try :
+        # download_HF(','.join(all_codes[:200]), HF_columns, dt_from, dt_to)
+        load_data(0, ",".join(all_codes[:100]), HF_columns, dt_from, dt_to)
+    except:
+        log.info("Unexpected error: %s"%str(sys.exc_info()[0]))
+        log.info("traceback:" + str(traceback.format_exc()))
+
+    THS_iFinDLogout()
+    log.info("ths logout")
+    log.info("done.")
     pass
 
-def build_todo_list(todo_file, day_stat, day_end) :
-    log.info("build todo list %s from %s to %s"%(todo_file, result.dates[0], result.dates[1]))
-    with open(todo_file, 'w') as fp:
-        day = day_start
-        while day <= day_end :
-            # log.info("day %s, week day %d"%(day.strftime('%Y-%m-%d'), day.isoweekday()))
-            if day.isoweekday() >= 6 :
-                day_string = day.strftime('%Y-%m-%d')
-                log.info("day %s, week day %d, write into todos"%(day_string, day.isoweekday()))
-
-                num_of_batches = int((len(all_codes) + batch_size - 1)/batch_size)
-                log.info("total %d batches to run"%num_of_batches)
-                for i in range(num_of_batches) :
-                    log.info("batch, code %d -> %d"%(i*batch_size, (i+1)*batch_size))
-                    pcode = 'load_data(WORKER_ID, "%s 09:30:00", "%s 15:00:00", "%s", "%s"'% \
-                            (day_string, day_string, ",".join(all_codes[i*batch_size : (i+1)*batch_size]), HF_columns)
-                    log.info("python code : " + pcode)
-                    fp.write(pcode + "\n");
-            day = day + timedelta(days=1)
-    log.info("done")
 
 ###############################################################
 # worker/main processes define
@@ -576,101 +595,110 @@ def build_todo_list(todo_file, day_stat, day_end) :
 
 _users = [ 'qhfh001','qhfh002']
 _passwords = ['429742', '891111']
+_status_file = 'load_HF.status'
+# format
+# 2018-02-02 done
+# 2018-02-01 failed
 
-def worker_dummy(worker_id, q_todos, q_status) :
+def worker(worker_id, q_todos, q_status) :
     worker_name = "worker%d"%worker_id
+    def wprint(msg) :
+        log.info(worker_name + " - " + msg)
+
     log.info("THS login")
     log.info('THS_iFinDLogin(%s, %s)'%(_users[worker_id], _passwords[worker_id]))
+    ret = THS_iFinDLogin(_users[worker_id], _passwords[worker_id])
+    log.info("ths login return : " + str(ret))
+    if ret != 0 :
+        raise Exception('login failed')
 
     log.info("%s started"%worker_name)
     while not q_todos.empty() :
-        todo = None
+        day = None
         try :
-            todo = q_todos.get_nowait()
+            day = q_todos.get_nowait()
         except :
             log.info("get todo, error: %s"%str(sys.exc_info()[0]))
 
-        if todo is not None :    # process it
-            line_no = todo[0]
-            pcode = todo[1]
-            log.info("loading, line_no %d, python code %s"%(line_no, pcode))
+        if day is not None :    # process it
             try :
-                log.info("put done into status queue")
-                q_status.put([line_no, "done"])
+                log.info("load data for day %s"%day)
+
+                num_of_batches = int((len(all_codes) + batch_size - 1)/batch_size)
+                log.info("total %d batches to run"%num_of_batches)
+                for i in range(num_of_batches) :
+                    log.info("batch, code %d -> %d"%(i*batch_size, (i+1)*batch_size))
+                    load_data(worker_id, ",".join(all_codes[i*batch_size : (i+1)*batch_size]), HF_columns, \
+                              day + " 09:30:00", day + " 15:00:00")
+                log.info("udate status done for " + day)
+                q_status.put(day + " done")
             except :
                 log.info("load data, error: %s"%str(sys.exc_info()[0]))
                 log.info("traceback:" + str(traceback.format_exc()))
-                log.info("put failed into status queue")
-                q_status.put([line_no, "failed"])
-
-            log.info("status queue size : %r"%q_status.qsize())
-
-        if False :
-            import time as t
-            t.sleep(0.5)   # sleep 0.5 second
+                log.info("udate status failed for " + day)
+                q_status.put(day + " failed")
 
     log.info("%s end"%worker_name)
 
-    log.info("THS logout")
+    THS_iFinDLogout()
+    log.info("ths logout")
+    log.info("done.")
     pass
 
-def load_todo_list(todo_file, status_file) :
-    log.info("load %s, status %s"%(todo_file, status_file))
-    log.info("current patah : " + os.getcwd())
 
-    log.info("create two queue, q_todo([line#, pcode]) and q_status([line#, done/failed])")
+def main(start, end, status_file) :
+    log.info("main(), from %s to %s, status to %s"%(start, end, status_file))
+
+    log.info('create two queue, q_todo and q_status')
     q_todos = Queue()
     q_status = Queue()
 
-    log.info("put all pcode to q_todo")
+    log.info("Path at terminal when executing this file")
+    log.info(os.getcwd() + "\n")
 
-    dones = set()
-    with open(status_file) as fp:
-        for line in fp :
-            if "done" in line :
-                line_no = int(line.split()[0])
-                log.info("this line is done : %d"%line_no)
-                dones.add(line_no)
+    log.info("read %s file, get list of days done"%_status_file)
+    days_done = set()
+    if os.path.isfile(_status_file) :
+        log.info("file exists, read it")
+        with open(_status_file) as fp:
+            for line in fp :
+                # log.info("read line : " + line[:-1])
+                if 'done' in line :
+                    # log.info("done day : " + str(line.split()))
+                    days_done.add(line.split()[0])
+            pass
+    log.info("%d days done, will skip them"%len(days_done))
+    log.info(str(list(days_done)[:3]) + "....")
 
-    with open(todo_file) as fp:
-        line_no = 0
-        for line in fp :
-            if line_no in dones :
-                log.info("%d done, skip"%(line_no))
-            else :
-                log.info("put to q_todos : [%d '%s']"%(line_no, line[:-1]))
-                q_todos.put([line_no, line[:-1]])
-            line_no += 1;
-    log.info("q_todos's size : %d"%q_todos.qsize())
+    day_start = datetime.strptime(start, "%Y-%m-%d")
+    day_end = datetime.strptime(end, "%Y-%m-%d")
+    day = day_start
+    while day >= day_end :
+        # log.info("day %s, week day %d"%(day.strftime('%Y-%m-%d'), day.isoweekday()))
+        if day.isoweekday() < 6 and day.strftime("%Y-%m-%d") not in days_done :
+            # log.info(day.strftime('%Y-%m-%d'))
+            q_todos.put(day.strftime('%Y-%m-%d'))
+        day = day - timedelta(days=1)
+    log.info("queue q_todos size : %d"%q_todos.qsize())
 
     log.info("start two worker")
-    w0 = Process(target=worker_dummy, args=(0, q_todos, q_status))
-    w1 = Process(target=worker_dummy, args=(1, q_todos, q_status))
+    w0 = Process(target=worker, args=(0, q_todos, q_status))
+    w1 = Process(target=worker, args=(1, q_todos, q_status))
     w0.start()
     w1.start()
 
     import time as t
-    while True :
-        log.info("try to join w0 and w1, 5 + 5 seconds")
-        w0.join(0.5)
-        w1.join(0.5)
-        log.info("current status, w0 alive %r, w1 alive %r, status queue empty %r"%(w0.is_alive(), w1.is_alive(), q_status.empty()))
-        if not (w0.is_alive() or w1.is_alive() or not q_status.empty()) :
-            break;
-
-        with open(status_file, 'a') as fp:
+    while not q_todos.empty() :
+        t.sleep(10)   # sleep one second
+        with open(_status_file, 'a') as fp:
             while True :
                 try :
-                    log.info("try to get status, queue size : %r"%q_status.qsize())
-                    status = q_status.get(timeout=1)
-                    log.info("get status : %r"%status)
-                    fp.write("%d %s\n"%(status[0], status[1]))
+                    status = q_status.get_nowait()
+                    log.info("status : " + status)
+                    fp.write(status + "\n")
                 except :
-                    log.info("errror on get status: %s"%str(sys.exc_info()[0]))
+                    log.info("get status, error: %s"%str(sys.exc_info()[0]))
                     break
-
-        import time as t
-        t.sleep(5)   # sleep 0.5 second
 
     log.info("q_todos empty")
     log.info("join w0")
@@ -681,46 +709,27 @@ def load_todo_list(todo_file, status_file) :
 
     q_todos.close()
     q_status.close()
-    log.info("done")
 
+    log.info('done')
+
+    # read file load_HF.conf, -> load_HF.status
+
+###############################################################
+# main
+###############################################################
 if __name__ == '__main__':
-    if False :
+    if True :
         app01()
         sys.exit(0)
         # main(start, end, status_file)
 
     log.info('start...')
     parser = argparse.ArgumentParser(description='load historic high frequence (1 minu) data.')
-    parser.add_argument('--name', dest='name', help='name of building list or todo list', nargs=1, required=True)
-    parser.add_argument('--list', dest='dates', help='start/end date, desc order e.g, 2018-01-01 2018-12-31', nargs=2)
-    parser.add_argument('--load', help='load todo list <name>', action="store_true")
+    parser.add_argument('-l', '--list', dest='dates', help='start/end date, desc order e.g, 2018-04-03 2017-01-01', nargs=2)
+    log.info('to parse...' + str(sys.argv))
+    result = parser.parse_args(sys.argv[1:])
+    log.info('parsing result : ' + str(result))
 
-    if True :
-        log.info("testing arg parsing")
-        result= parser.parse_args(['--name','HF2018','--list', '2018-01-01', '2018-04-04'])
-        result= parser.parse_args(['--name','HF2018','--load'])
-        log.info('parsing result : ' + str(result))
-
-    if False :
-        log.info('to parse...' + str(sys.argv))
-        result = parser.parse_args(sys.argv[1:])
-        log.info('parsing result : ' + str(result))
-
-    # command line ussage  :
-    # build list HF2017.todos
-    #       --name HF2017 --list 2017-01-01 2017-12-31
-    # load list HF2017.todos, and write result to HF2017.status
-    #       --name HF2017 --load
-    todo_file = result.name[0] + ".todos"
-    status_file = result.name[0] + ".status"
-    if result.dates is not None :
-        day_start = datetime.strptime(result.dates[0], "%Y-%m-%d")
-        day_end = datetime.strptime(result.dates[1], "%Y-%m-%d")
-        build_todo_list(todo_file, day_start, day_end)
-    elif result.load :
-        log.info("todos : " + todo_file)
-        log.info("staus : " + status_file)
-        load_todo_list(todo_file, status_file)
+    main(result.dates[0], result.dates[1], _status_file)
 
     log.info("main done")
-
