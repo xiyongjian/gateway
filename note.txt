@@ -355,6 +355,7 @@ create table stockdata (
 );
 
 
+// changet stockdata_stage0 and stockdata_stage1
 drop table stockdata_stage;
 create table stockdata_stage (
     minute datetime,

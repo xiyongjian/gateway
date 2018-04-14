@@ -507,7 +507,8 @@ def download_HF(codes, columns, dt_from, dt_to) :
     return data
 
 
-def load_data(codes, columns, dt_from, dt_to) :
+def load_data(index, codes, columns, dt_from, dt_to) :
+    log.info("load_data index : %d"%index)
     log.info("load_data codes #: %d"%len(codes))
     log.info("load_data columns # : %d"%len(columns.split(';')))
     log.info("load_data columns : " + columns)
@@ -524,12 +525,13 @@ def load_data(codes, columns, dt_from, dt_to) :
     engine = create_engine(config.config['db_url'])
     # engine = create_engine("mysql+mysqlconnector://ths:ths@127.0.0.1:3306/test");
     data.rename(columns={'thscode': 'code', 'time': 'minute', 'open': 'open_', 'change': 'change_'}, inplace=True)
-    data.to_sql(name='stockdata_stage', con=engine, if_exists='append', index=False)
+    log.info("load into stage%d"%index)
+    data.to_sql(name='stockdata_stage%d'%index, con=engine, if_exists='append', index=False)
 
     # connection = engine.connect()
     # result = connection.execute("replace into stockdata select * from stockdata_stage")
-    log.info("replace info")
-    result = engine.execute("replace into stockdata select * from stockdata_stage")
+    log.info("replace into from stage%d"%index)
+    result = engine.execute("replace into stockdata select * from stockdata_stage%d"%index)
     log.info("replace into, return : " + str(result))
 
     log.info("clean stage table")
@@ -572,7 +574,7 @@ def app01() :
 
     try :
         # download_HF(','.join(all_codes[:200]), HF_columns, dt_from, dt_to)
-        load_data(all_codes[:100], HF_columns, dt_from, dt_to)
+        load_data(0, all_codes[:100], HF_columns, dt_from, dt_to)
     except:
         log.info("Unexpected error: %s"%str(sys.exc_info()[0]))
         log.info("traceback:" + str(traceback.format_exc()))
@@ -622,7 +624,7 @@ def worker(index, q_todos, q_status) :
                 log.info("total %d batches to run"%num_of_batches)
                 for i in range(num_of_batches) :
                     log.info("batch, code %d -> %d"%(i*batch_size, (i+1)*batch_size))
-                    load_data(all_codes[i*batch_size : (i+1)*batch_size], HF_columns, \
+                    load_data(index, all_codes[i*batch_size : (i+1)*batch_size], HF_columns, \
                               day + " 09:30:00", day + " 15:00:00")
                 q_status.put(day + " done")
             except :
