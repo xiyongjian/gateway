@@ -671,13 +671,14 @@ def load_todo_list(todo_file, status_file) :
     log.info("put all pcode(not done) to q_todo")
 
     dones = set()
-    with open(status_file) as fp:
-        for line in fp :
-            if "done" in line :
-                line_no = int(line.split()[0])
-                # log.info("this line is done : %d"%line_no)
-                dones.add(line_no)
-    log.info("total %d lines are done"%len(dones))
+    if os.path.exists(status_file) :
+        with open(status_file) as fp:
+            for line in fp :
+                if "done" in line :
+                    line_no = int(line.split()[0])
+                    # log.info("this line is done : %d"%line_no)
+                    dones.add(line_no)
+        log.info("total %d lines are done"%len(dones))
 
     todos = []
     with open(todo_file) as fp:
