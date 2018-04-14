@@ -25,5 +25,12 @@ s = '{"errorcode":0,"errmsg":"","tables":[{"table":{"tradeDate":["2018-03-22"],"
 j = json.loads(s)
 print(json.dumps(j, indent = 4))
 
-l = ['a', 'b', 'c']
+l = ['a', 'b', 'c', 'd', 'e', 'f']
 print('join three elements', ','.join(l))
+
+for i in range(int(len(l)/5) + 1) :
+    print(i)
+    print(l[i*5 : (i+1)*5])
+
+print(int(len(l)/5))
+print(l[5 : 10])
