@@ -19,10 +19,24 @@ import config
 # logging setup
 import sys
 import logbook
+# from logbook import NestedSetup, NullHandler, FileHandler, MailHandler, Processor
 if True :
-    handler = logbook.StreamHandler(sys.stdout, level=logbook.DEBUG)
+    handler = logbook.StreamHandler(sys.stdout, level=logbook.DEBUG, bubble=True)
     handler.formatter.format_string = '{record.time}|{record.process_name}-{record.thread_name}|{record.level_name}|{record.module}|{record.func_name}|{record.lineno} - {record.message}'
-    handler.push_application()
+    # handler.push_application()
+
+    fhandler = logbook.FileHandler("load_HF.log", level=logbook.DEBUG, bubble=True)
+    fhandler.formatter.format_string = '{record.time}|{record.process_name}-{record.thread_name}|{record.level_name}|{record.module}|{record.func_name}|{record.lineno} - {record.message}'
+    # fhandler.push_application()
+
+    setup = logbook.NestedSetup([
+        # make sure we never bubble up to the stderr handler
+        # if we run out of setup handling
+        logbook.NullHandler(),
+        handler, fhandler
+    ])
+    setup.push_application()
+
     log = logbook.Logger("load_HF")
 
 batch_size = 100;
@@ -476,10 +490,14 @@ def download_HF(codes, columns, dt_from, dt_to) :
 
     start = datetime.now()
     quotes = THS_HighFrequenceSequence(codes, columns, options, dt_from, dt_to);
-    data = THS_Trans2DataFrame(quotes)
+    try :
+        data = THS_Trans2DataFrame(quotes)
+        log.info('download pandas dataframe size : %s'%str(data.shape))
+    except :
+        log.error("quotes downloaded : " + str(quotes))
+        raise
     end = datetime.now()
 
-    log.info('download pandas dataframe size : %s'%str(data.shape))
 
     log.info("start at : %s"%str(start))
     log.info("end at   : %s"%str(end))

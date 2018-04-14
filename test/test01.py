@@ -34,3 +34,13 @@ for i in range(int(len(l)/5) + 1) :
 
 print(int(len(l)/5))
 print(l[5 : 10])
+
+import traceback
+try :
+    i = 0;
+    j = 40 / i;
+except :
+    print("Unexpected error: %s"%str(sys.exc_info()[0]))
+    print("traceback:" + str(traceback.format_exc()))
+    raise
+
