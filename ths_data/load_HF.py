@@ -626,10 +626,12 @@ def worker(index, q_todos, q_status) :
                     log.info("batch, code %d -> %d"%(i*batch_size, (i+1)*batch_size))
                     load_data(index, all_codes[i*batch_size : (i+1)*batch_size], HF_columns, \
                               day + " 09:30:00", day + " 15:00:00")
+                log.info("udate status done for " + day)
                 q_status.put(day + " done")
             except :
                 log.info("load data, error: %s"%str(sys.exc_info()[0]))
                 log.info("traceback:" + str(traceback.format_exc()))
+                log.info("udate status failed for " + day)
                 q_status.put(day + " failed")
 
     log.info("%s end"%worker_name)
