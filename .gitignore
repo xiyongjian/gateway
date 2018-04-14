@@ -77,3 +77,4 @@ TAGS
 
 .ipynb_checkpoints/
 
+*.status
