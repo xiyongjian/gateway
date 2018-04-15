@@ -555,7 +555,7 @@ def build_todo_list(todo_file, day_stat, day_end) :
         day = day_start
         while day <= day_end :
             # log.info("day %s, week day %d"%(day.strftime('%Y-%m-%d'), day.isoweekday()))
-            if day.isoweekday() >= 6 :
+            if day.isoweekday() < 6 :
                 day_string = day.strftime('%Y-%m-%d')
                 log.info("day %s, week day %d, write into todos"%(day_string, day.isoweekday()))
 
@@ -747,13 +747,13 @@ if __name__ == '__main__':
     parser.add_argument('--list', dest='dates', help='start/end date, desc order e.g, 2018-01-01 2018-12-31', nargs=2)
     parser.add_argument('--load', help='load todo list <name>', action="store_true")
 
-    if True :
+    if False :
         log.info("testing arg parsing")
         result= parser.parse_args(['--name','HF2018','--list', '2018-01-01', '2018-04-04'])
         result= parser.parse_args(['--name','HF2018','--load'])
         log.info('parsing result : ' + str(result))
 
-    if False :
+    if True :
         log.info('to parse...' + str(sys.argv))
         result = parser.parse_args(sys.argv[1:])
         log.info('parsing result : ' + str(result))
