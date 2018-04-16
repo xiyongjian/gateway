@@ -52,3 +52,10 @@ print(type(l[1]))
 l = "23"
 print(type(int(l)))
 print(int(l))
+
+a = [1,2,3,4,5,6,7,8,9]
+b = [3,4,5,3,3,3,3,3,3]
+c = [True,False,True,True,True,True,True,True,True]
+print("c : %r"%c)
+
+print([i for (i, cond) in zip(a, c) if cond])
