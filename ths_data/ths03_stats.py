@@ -12,11 +12,15 @@ import time
 import json
 from datetime import datetime
 
+_users = [ 'qhfh001','qhfh002']
+_passwords = ['429742', '891111']
 
-if __name__=="__main__":
-    print("THS login")
-    THS_iFinDLogin("sissi008","677085")
-    ID=c_int32(0)
+def check(user, password) :
+    print("THS login, user %s, password %s"%(user, password))
+    ## THS_iFinDLogin("sissi008","677085")
+    printret = THS_iFinDLogin(user, password)
+    ret = THS_iFinDLogin(user, password)
+    print("login return : %r"%ret)
 
     stats = THS_DataStatistics()
     print("stats : ", json.dumps(stats, indent=4))
@@ -26,3 +30,10 @@ if __name__=="__main__":
 
     THS_iFinDLogout()
     print("done.")
+
+if __name__=="__main__":
+    print("start")
+    check(_users[0], _passwords[0])
+    check(_users[1], _passwords[1])
+    print("done")
+
