@@ -1,0 +1,434 @@
+--------------------------------------------------------
+tk initial commit code change
+
+switch project name to 'gateway'
+
+setup env variable : PYTHONPATH
+add 'python setup.py -v build' for cn_stock_holidy and gateway path (with '\' at end!)
+
+PYTHONPATH=e:\Users\xyj\PycharmProjects\gateway2\gateway\build\lib.win-amd64-3.5\;e:\Users\xyj\PycharmProjects\gateway2\cn_stock_holidays\build\lib\
+
+add file :
+    data.py
+    watchlists.py
+
+find .. | while read i ; do ed $i <<< $',s/xx/gateway/g'; done
+
+code changes :
+===================== gateway/./algorithm.py
+@@ -134,6 +137,9 @@
++from gateway.gens import sim_engine2
+
+@@ -266,6 +272,8 @@
++        self.clock_file = kwargs.pop('clock_file', None)
+
+@@ -583,7 +591,8 @@
+-            self._create_clock(),
++            # self._create_clock(),
+
+===================== gateway/./finance/risk/cumulative.py
+@@ -142,8 +142,15 @@
+     def update(self, dt, algorithm_returns, benchmark_returns, leverage):
+         # Keep track of latest dt for use in to_dict and other methods
+         # that report current state.
+-        self.latest_dt = dt
++
++        try :
+         dt_loc = self.cont_index.get_loc(dt)
++        except Exception as e :
++            log.info("missing dt %s in cont_index"%(str(dt)))
++            return
++
++        self.latest_dt = dt
++        # dt_loc = self.cont_index.get_loc(dt)
+         self.latest_dt_loc = dt_loc
+
+===================== gateway/./gens/tradesimulation.py
+@@ -186,8 +186,12 @@
+                     perf_tracker.position_tracker.handle_splits(splits)
+
+         def handle_benchmark(date, benchmark_source=self.benchmark_source):
++            try :
+             algo.perf_tracker.all_benchmark_returns[date] = \
+                 benchmark_source.get_value(date)
++            except Exception as e :
++                # algo.perf_tracker.all_benchmark_returns[date] = 1
++                pass
+
+===================== gateway/./__init__.py
++'''.
++extra added.
++'''.
++from . watchlists import WatchLists.
++from . data import Data.
+
+
+--------------------------------------------------------
+tk conda env setup
+check github project :
+gateway-conda-env
+
+conda-list :
+(zipline) e:\Users\xyj\PycharmProjects>conda list --explicit
+# This file may be used to create an environment using:
+# $ conda create --name <env> --file <this file>
+# platform: win-64
+@EXPLICIT
+https://conda.anaconda.org/quantopian/win-64/alembic-0.7.7-py35_0.tar.bz2
+https://repo.continuum.io/pkgs/main/win-64/asn1crypto-0.24.0-py35_0.tar.bz2
+https://conda.anaconda.org/quantopian/win-64/bcolz-0.12.1-np111py35_0.tar.bz2
+https://repo.continuum.io/pkgs/main/win-64/bottleneck-1.2.1-py35h8a3671c_0.tar.bz2
+https://conda.anaconda.org/anaconda/win-64/bzip2-1.0.6-vc14_3.tar.bz2
+https://repo.continuum.io/pkgs/main/win-64/ca-certificates-2017.08.26-h94faf87_0.tar.bz2
+https://repo.continuum.io/pkgs/main/win-64/certifi-2017.11.5-py35h456c6ae_0.tar.bz2
+https://repo.continuum.io/pkgs/main/win-64/cffi-1.11.2-py35h74ad5ef_0.tar.bz2
+https://repo.continuum.io/pkgs/main/win-64/chardet-3.0.4-py35h177e1b7_1.tar.bz2
+https://repo.continuum.io/pkgs/main/win-64/click-6.7-py35h10df73f_0.tar.bz2
+https://repo.continuum.io/pkgs/main/win-64/contextlib2-0.5.5-py35h0a97e54_0.tar.bz2
+https://conda.anaconda.org/anaconda/win-64/cryptography-2.0.3-py35h67a4558_1.tar.bz2
+https://repo.continuum.io/pkgs/main/win-64/cycler-0.10.0-py35hcc71164_0.tar.bz2
+https://conda.anaconda.org/quantopian/win-64/cyordereddict-0.2.2-py35_0.tar.bz2
+https://conda.anaconda.org/anaconda/win-64/cython-0.27.3-py35h82876f0_0.tar.bz2
+https://repo.continuum.io/pkgs/main/win-64/decorator-4.1.2-py35hc7d1f2e_0.tar.bz2
+https://conda.anaconda.org/quantopian/win-64/empyrical-0.3.2-py35_0.tar.bz2
+https://conda.anaconda.org/anaconda/win-64/freetype-2.8-vc14h17c9bdf_0.tar.bz2
+https://conda.anaconda.org/anaconda/win-64/hdf5-1.10.1-vc14hb361328_0.tar.bz2
+https://repo.continuum.io/pkgs/main/win-64/icc_rt-2017.0.4-h97af966_0.tar.bz2
+https://conda.anaconda.org/anaconda/win-64/icu-58.2-vc14hc45fdbb_0.tar.bz2
+https://repo.continuum.io/pkgs/main/win-64/idna-2.6-py35h8dcb9ae_1.tar.bz2
+https://repo.continuum.io/pkgs/main/win-64/intel-openmp-2018.0.0-hd92c6cd_8.tar.bz2
+https://conda.anaconda.org/quantopian/win-64/intervaltree-2.1.0-py35_0.tar.bz2
+https://conda.anaconda.org/anaconda/win-64/jpeg-9b-vc14h4d7706e_1.tar.bz2
+https://conda.anaconda.org/anaconda/win-64/libpng-1.6.32-vc14h5163883_3.tar.bz2
+https://conda.anaconda.org/quantopian/win-64/logbook-0.12.5-py35_0.tar.bz2
+https://conda.anaconda.org/quantopian/win-64/lru-dict-1.1.4-py35_0.tar.bz2
+https://conda.anaconda.org/anaconda/win-64/lzo-2.10-vc14h0a64fa6_1.tar.bz2
+https://repo.continuum.io/pkgs/main/win-64/mako-1.0.7-py35ha146b58_0.tar.bz2
+https://repo.continuum.io/pkgs/main/win-64/markupsafe-1.0-py35hc253e08_1.tar.bz2
+https://repo.continuum.io/pkgs/main/win-64/matplotlib-2.1.2-py35h016c42a_0.tar.bz2
+https://repo.continuum.io/pkgs/main/win-64/mkl-2018.0.1-h2108138_4.tar.bz2
+https://repo.continuum.io/pkgs/main/win-64/multipledispatch-0.4.9-py35hfb38682_0.tar.bz2
+https://repo.continuum.io/pkgs/main/win-64/networkx-2.0-py35h29b0c50_0.tar.bz2
+https://repo.continuum.io/pkgs/main/win-64/numexpr-2.6.4-py35hb78e28a_0.tar.bz2
+https://repo.continuum.io/pkgs/main/win-64/numpy-1.11.3-py35h4fc39be_3.tar.bz2
+https://conda.anaconda.org/anaconda/win-64/openssl-1.0.2l-vc14hf4c37d5_5.tar.bz2
+https://repo.continuum.io/pkgs/free/win-64/pandas-0.18.1-np111py35_0.tar.bz2
+https://repo.continuum.io/pkgs/free/win-64/pandas-datareader-0.5.0-py35_0.tar.bz2
+https://repo.continuum.io/pkgs/main/win-64/patsy-0.5.0-py35_0.tar.bz2
+https://repo.continuum.io/pkgs/main/win-64/pip-9.0.1-py35h691316f_4.tar.bz2
+https://repo.continuum.io/pkgs/main/win-64/pycparser-2.18-py35h15a15da_1.tar.bz2
+https://conda.anaconda.org/anaconda/win-64/pyopenssl-17.4.0-py35hc34edb9_0.tar.bz2
+https://repo.continuum.io/pkgs/main/win-64/pyparsing-2.2.0-py35hcabcaab_1.tar.bz2
+https://repo.continuum.io/pkgs/main/win-64/pyqt-5.6.0-py35hd46907b_5.tar.bz2
+https://repo.continuum.io/pkgs/main/win-64/pysocks-1.6.7-py35hb30ac0d_1.tar.bz2
+https://repo.continuum.io/pkgs/main/win-64/pytables-3.4.2-py35h9e98cc6_2.tar.bz2
+https://repo.continuum.io/pkgs/main/win-64/python-3.5.4-h1357f44_23.tar.bz2
+https://repo.continuum.io/pkgs/main/win-64/python-dateutil-2.6.1-py35h6b299a3_1.tar.bz2
+https://repo.continuum.io/pkgs/main/win-64/pytz-2017.3-py35hb294b1a_0.tar.bz2
+https://conda.anaconda.org/anaconda/win-64/qt-5.6.2-vc14h6f8c307_12.tar.bz2
+https://repo.continuum.io/pkgs/main/win-64/requests-2.18.4-py35h54a615f_1.tar.bz2
+https://repo.continuum.io/pkgs/free/win-64/requests-file-1.4.1-py35_0.tar.bz2
+https://repo.continuum.io/pkgs/free/win-64/requests-ftp-0.3.1-py35_0.tar.bz2
+https://repo.continuum.io/pkgs/main/win-64/scipy-1.0.0-py35h75710e8_0.tar.bz2
+https://repo.continuum.io/pkgs/main/win-64/setuptools-38.4.0-py35_0.tar.bz2
+https://repo.continuum.io/pkgs/main/win-64/sip-4.18.1-py35h01cbaa7_2.tar.bz2
+https://repo.continuum.io/pkgs/main/win-64/six-1.11.0-py35hc1da2df_1.tar.bz2
+https://repo.continuum.io/pkgs/main/win-64/sortedcontainers-1.5.9-py35_0.tar.bz2
+https://repo.continuum.io/pkgs/main/win-64/sqlalchemy-1.2.0-py35hfa6e2cd_0.tar.bz2
+https://conda.anaconda.org/anaconda/win-64/sqlite-3.20.1-vc14h7ce8c62_1.tar.bz2
+https://repo.continuum.io/pkgs/main/win-64/statsmodels-0.8.0-py35hfa6034c_0.tar.bz2
+https://repo.continuum.io/pkgs/main/win-64/toolz-0.9.0-py35_0.tar.bz2
+https://repo.continuum.io/pkgs/main/win-64/tornado-4.5.3-py35_0.tar.bz2
+https://repo.continuum.io/pkgs/main/win-64/urllib3-1.22-py35h8cc84eb_0.tar.bz2
+https://repo.continuum.io/pkgs/main/win-64/vc-14-h0510ff6_3.tar.bz2
+https://repo.continuum.io/pkgs/main/win-64/vs2015_runtime-14.0.25123-3.tar.bz2
+https://repo.continuum.io/pkgs/main/win-64/wheel-0.30.0-py35h38a90bc_1.tar.bz2
+https://repo.continuum.io/pkgs/main/win-64/win_inet_pton-1.0.1-py35hbef1270_1.tar.bz2
+https://repo.continuum.io/pkgs/main/win-64/wincertstore-0.2-py35hfebbdb8_0.tar.bz2
+https://conda.anaconda.org/quantopian/win-64/zipline-1.1.1-np111py35_0.tar.bz2
+https://conda.anaconda.org/anaconda/win-64/zlib-1.2.11-vc14h1cdd9ab_1.tar.bz2
+
+download packages:
+https://conda.anaconda.org/Quantopian/win-64/alembic-0.7.7-py35_0.tar.bz2
+https://repo.continuum.io/pkgs/main/win-64/asn1crypto-0.24.0-py35_0.tar.bz2
+https://conda.anaconda.org/Quantopian/win-64/bcolz-0.12.1-np111py35_0.tar.bz2
+https://repo.continuum.io/pkgs/main/win-64/bottleneck-1.2.1-py35h8a3671c_0.tar.bz2
+https://repo.continuum.io/pkgs/free/win-64/bzip2-1.0.6-vc14_3.tar.bz2
+https://repo.continuum.io/pkgs/main/win-64/ca-certificates-2017.08.26-h94faf87_0.tar.bz2
+https://repo.continuum.io/pkgs/main/win-64/certifi-2017.11.5-py35h456c6ae_0.tar.bz2
+https://repo.continuum.io/pkgs/main/win-64/cffi-1.11.2-py35h74ad5ef_0.tar.bz2
+https://repo.continuum.io/pkgs/main/win-64/chardet-3.0.4-py35h177e1b7_1.tar.bz2
+https://repo.continuum.io/pkgs/main/win-64/click-6.7-py35h10df73f_0.tar.bz2
+https://repo.continuum.io/pkgs/main/win-64/contextlib2-0.5.5-py35h0a97e54_0.tar.bz2
+https://repo.continuum.io/pkgs/main/win-64/cryptography-2.0.3-py35h67a4558_1.tar.bz2
+https://repo.continuum.io/pkgs/main/win-64/cycler-0.10.0-py35hcc71164_0.tar.bz2
+https://conda.anaconda.org/Quantopian/win-64/cyordereddict-0.2.2-py35_0.tar.bz2
+https://repo.continuum.io/pkgs/main/win-64/cython-0.27.3-py35h82876f0_0.tar.bz2
+https://repo.continuum.io/pkgs/main/win-64/decorator-4.1.2-py35hc7d1f2e_0.tar.bz2
+https://conda.anaconda.org/Quantopian/win-64/empyrical-0.3.2-py35_0.tar.bz2
+https://repo.continuum.io/pkgs/main/win-64/freetype-2.8-vc14h17c9bdf_0.tar.bz2
+https://repo.continuum.io/pkgs/main/win-64/hdf5-1.10.1-vc14hb361328_0.tar.bz2
+https://repo.continuum.io/pkgs/main/win-64/icc_rt-2017.0.4-h97af966_0.tar.bz2
+https://repo.continuum.io/pkgs/main/win-64/icu-58.2-vc14hc45fdbb_0.tar.bz2
+https://repo.continuum.io/pkgs/main/win-64/idna-2.6-py35h8dcb9ae_1.tar.bz2
+https://repo.continuum.io/pkgs/main/win-64/intel-openmp-2018.0.0-hd92c6cd_8.tar.bz2
+https://conda.anaconda.org/Quantopian/win-64/intervaltree-2.1.0-py35_0.tar.bz2
+https://repo.continuum.io/pkgs/main/win-64/jpeg-9b-vc14h4d7706e_1.tar.bz2
+https://repo.continuum.io/pkgs/main/win-64/libpng-1.6.32-vc14h5163883_3.tar.bz2
+https://conda.anaconda.org/Quantopian/win-64/logbook-0.12.5-py35_0.tar.bz2
+https://conda.anaconda.org/Quantopian/win-64/lru-dict-1.1.4-py35_0.tar.bz2
+https://repo.continuum.io/pkgs/main/win-64/lzo-2.10-vc14h0a64fa6_1.tar.bz2
+https://repo.continuum.io/pkgs/main/win-64/mako-1.0.7-py35ha146b58_0.tar.bz2
+https://repo.continuum.io/pkgs/main/win-64/markupsafe-1.0-py35hc253e08_1.tar.bz2
+https://repo.continuum.io/pkgs/main/win-64/matplotlib-2.1.2-py35h016c42a_0.tar.bz2
+https://repo.continuum.io/pkgs/main/win-64/mkl-2018.0.1-h2108138_4.tar.bz2
+https://repo.continuum.io/pkgs/main/win-64/multipledispatch-0.4.9-py35hfb38682_0.tar.bz2
+https://repo.continuum.io/pkgs/main/win-64/networkx-2.0-py35h29b0c50_0.tar.bz2
+https://repo.continuum.io/pkgs/main/win-64/numexpr-2.6.4-py35hb78e28a_0.tar.bz2
+https://repo.continuum.io/pkgs/main/win-64/numpy-1.11.3-py35h4fc39be_3.tar.bz2
+https://repo.continuum.io/pkgs/main/win-64/openssl-1.0.2l-vc14hf4c37d5_5.tar.bz2
+https://repo.continuum.io/pkgs/free/win-64/pandas-0.18.1-np111py35_0.tar.bz2
+https://repo.continuum.io/pkgs/free/win-64/pandas-datareader-0.5.0-py35_0.tar.bz2
+https://repo.continuum.io/pkgs/main/win-64/patsy-0.5.0-py35_0.tar.bz2
+https://repo.continuum.io/pkgs/main/win-64/pip-9.0.1-py35h691316f_4.tar.bz2
+https://repo.continuum.io/pkgs/main/win-64/pycparser-2.18-py35h15a15da_1.tar.bz2
+https://repo.continuum.io/pkgs/main/win-64/pyopenssl-17.4.0-py35hc34edb9_0.tar.bz2
+https://repo.continuum.io/pkgs/main/win-64/pyparsing-2.2.0-py35hcabcaab_1.tar.bz2
+https://repo.continuum.io/pkgs/main/win-64/pyqt-5.6.0-py35hd46907b_5.tar.bz2
+https://repo.continuum.io/pkgs/main/win-64/pysocks-1.6.7-py35hb30ac0d_1.tar.bz2
+https://repo.continuum.io/pkgs/main/win-64/pytables-3.4.2-py35h9e98cc6_2.tar.bz2
+https://repo.continuum.io/pkgs/main/win-64/python-3.5.4-h1357f44_23.tar.bz2
+https://repo.continuum.io/pkgs/main/win-64/python-dateutil-2.6.1-py35h6b299a3_1.tar.bz2
+https://repo.continuum.io/pkgs/main/win-64/pytz-2017.3-py35hb294b1a_0.tar.bz2
+https://repo.continuum.io/pkgs/main/win-64/qt-5.6.2-vc14h6f8c307_12.tar.bz2
+https://repo.continuum.io/pkgs/main/win-64/requests-2.18.4-py35h54a615f_1.tar.bz2
+https://repo.continuum.io/pkgs/free/win-64/requests-file-1.4.1-py35_0.tar.bz2
+https://repo.continuum.io/pkgs/free/win-64/requests-ftp-0.3.1-py35_0.tar.bz2
+https://repo.continuum.io/pkgs/main/win-64/scipy-1.0.0-py35h75710e8_0.tar.bz2
+https://repo.continuum.io/pkgs/main/win-64/setuptools-38.4.0-py35_0.tar.bz2
+https://repo.continuum.io/pkgs/main/win-64/sip-4.18.1-py35h01cbaa7_2.tar.bz2
+https://repo.continuum.io/pkgs/main/win-64/six-1.11.0-py35hc1da2df_1.tar.bz2
+https://repo.continuum.io/pkgs/main/win-64/sortedcontainers-1.5.9-py35_0.tar.bz2
+https://repo.continuum.io/pkgs/main/win-64/sqlalchemy-1.2.0-py35hfa6e2cd_0.tar.bz2
+https://repo.continuum.io/pkgs/main/win-64/sqlite-3.20.1-vc14h7ce8c62_1.tar.bz2
+https://repo.continuum.io/pkgs/main/win-64/statsmodels-0.8.0-py35hfa6034c_0.tar.bz2
+https://repo.continuum.io/pkgs/main/win-64/toolz-0.9.0-py35_0.tar.bz2
+https://repo.continuum.io/pkgs/main/win-64/tornado-4.5.3-py35_0.tar.bz2
+https://repo.continuum.io/pkgs/main/win-64/urllib3-1.22-py35h8cc84eb_0.tar.bz2
+https://repo.continuum.io/pkgs/main/win-64/vc-14-h0510ff6_3.tar.bz2
+https://repo.continuum.io/pkgs/main/win-64/vs2015_runtime-14.0.25123-3.tar.bz2
+https://repo.continuum.io/pkgs/main/win-64/wheel-0.30.0-py35h38a90bc_1.tar.bz2
+https://repo.continuum.io/pkgs/main/win-64/win_inet_pton-1.0.1-py35hbef1270_1.tar.bz2
+https://repo.continuum.io/pkgs/main/win-64/wincertstore-0.2-py35hfebbdb8_0.tar.bz2
+https://repo.continuum.io/pkgs/main/win-64/zlib-1.2.11-vc14h1cdd9ab_1.tar.bz2
+
+conda list for requirements.txt
+(zipline) e:\Users\xyj\PycharmProjects>conda list -e
+# This file may be used to create an environment using:
+# $ conda create --name <env> --file <this file>
+# platform: win-64
+alembic=0.7.7=py35_0
+asn1crypto=0.24.0=py35_0
+bcolz=0.12.1=np111py35_0
+bottleneck=1.2.1=py35h8a3671c_0
+bzip2=1.0.6=vc14_3
+ca-certificates=2017.08.26=h94faf87_0
+certifi=2017.11.5=py35h456c6ae_0
+cffi=1.11.2=py35h74ad5ef_0
+chardet=3.0.4=py35h177e1b7_1
+click=6.7=py35h10df73f_0
+contextlib2=0.5.5=py35h0a97e54_0
+cryptography=2.0.3=py35h67a4558_1
+cycler=0.10.0=py35hcc71164_0
+cyordereddict=0.2.2=py35_0
+cython=0.27.3=py35h82876f0_0
+decorator=4.1.2=py35hc7d1f2e_0
+empyrical=0.3.2=py35_0
+freetype=2.8=vc14h17c9bdf_0
+hdf5=1.10.1=vc14hb361328_0
+icc_rt=2017.0.4=h97af966_0
+icu=58.2=vc14hc45fdbb_0
+idna=2.6=py35h8dcb9ae_1
+intel-openmp=2018.0.0=hd92c6cd_8
+intervaltree=2.1.0=py35_0
+jpeg=9b=vc14h4d7706e_1
+libpng=1.6.32=vc14h5163883_3
+logbook=0.12.5=py35_0
+lru-dict=1.1.4=py35_0
+lzo=2.10=vc14h0a64fa6_1
+mako=1.0.7=py35ha146b58_0
+markupsafe=1.0=py35hc253e08_1
+matplotlib=2.1.2=py35h016c42a_0
+mkl=2018.0.1=h2108138_4
+multipledispatch=0.4.9=py35hfb38682_0
+networkx=2.0=py35h29b0c50_0
+numexpr=2.6.4=py35hb78e28a_0
+numpy=1.11.3=py35h4fc39be_3
+openssl=1.0.2l=vc14hf4c37d5_5
+pandas=0.18.1=np111py35_0
+pandas-datareader=0.5.0=py35_0
+patsy=0.5.0=py35_0
+pip=9.0.1=py35h691316f_4
+pycparser=2.18=py35h15a15da_1
+pyopenssl=17.4.0=py35hc34edb9_0
+pyparsing=2.2.0=py35hcabcaab_1
+pyqt=5.6.0=py35hd46907b_5
+pysocks=1.6.7=py35hb30ac0d_1
+pytables=3.4.2=py35h9e98cc6_2
+python=3.5.4=h1357f44_23
+python-dateutil=2.6.1=py35h6b299a3_1
+pytz=2017.3=py35hb294b1a_0
+qt=5.6.2=vc14h6f8c307_12
+requests=2.18.4=py35h54a615f_1
+requests-file=1.4.1=py35_0
+requests-ftp=0.3.1=py35_0
+scipy=1.0.0=py35h75710e8_0
+setuptools=38.4.0=py35_0
+sip=4.18.1=py35h01cbaa7_2
+six=1.11.0=py35hc1da2df_1
+sortedcontainers=1.5.9=py35_0
+sqlalchemy=1.2.0=py35hfa6e2cd_0
+sqlite=3.20.1=vc14h7ce8c62_1
+statsmodels=0.8.0=py35hfa6034c_0
+toolz=0.9.0=py35_0
+tornado=4.5.3=py35_0
+urllib3=1.22=py35h8cc84eb_0
+vc=14=h0510ff6_3
+vs2015_runtime=14.0.25123=3
+wheel=0.30.0=py35h38a90bc_1
+win_inet_pton=1.0.1=py35hbef1270_1
+wincertstore=0.2=py35hfebbdb8_0
+zlib=1.2.11=vc14h1cdd9ab_1
+
+-- remove this one
+zipline=1.1.1=np111py35_0
+
+install env manually
+conda create -n <xx> --no-default-packages
+
+in install.bat :
+conda install --verbose --offline alembic-0.7.7-py35_0.tar.bz2 asn1crypto-0.24.0-py35_0.tar.bz2 bcolz-0.12.1-np111py35_0.tar.bz2 bottleneck-1.2.1-py35h8a3671c_0.tar.bz2 bzip2-1.0.6-vc14_3.tar.bz2 ca-certificates-2017.08.26-h94faf87_0.tar.bz2 certifi-2017.11.5-py35h456c6ae_0.tar.bz2 cffi-1.11.2-py35h74ad5ef_0.tar.bz2 chardet-3.0.4-py35h177e1b7_1.tar.bz2 click-6.7-py35h10df73f_0.tar.bz2 contextlib2-0.5.5-py35h0a97e54_0.tar.bz2 cryptography-2.0.3-py35h67a4558_1.tar.bz2 cycler-0.10.0-py35hcc71164_0.tar.bz2 cyordereddict-0.2.2-py35_0.tar.bz2 cython-0.27.3-py35h82876f0_0.tar.bz2 decorator-4.1.2-py35hc7d1f2e_0.tar.bz2 empyrical-0.3.2-py35_0.tar.bz2 freetype-2.8-vc14h17c9bdf_0.tar.bz2 hdf5-1.10.1-vc14hb361328_0.tar.bz2 icc_rt-2017.0.4-h97af966_0.tar.bz2 icu-58.2-vc14hc45fdbb_0.tar.bz2 idna-2.6-py35h8dcb9ae_1.tar.bz2 intel-openmp-2018.0.0-hd92c6cd_8.tar.bz2 intervaltree-2.1.0-py35_0.tar.bz2 jpeg-9b-vc14h4d7706e_1.tar.bz2 libpng-1.6.32-vc14h5163883_3.tar.bz2 logbook-0.12.5-py35_0.tar.bz2 lru-dict-1.1.4-py35_0.tar.bz2 lzo-2.10-vc14h0a64fa6_1.tar.bz2 mako-1.0.7-py35ha146b58_0.tar.bz2 markupsafe-1.0-py35hc253e08_1.tar.bz2 matplotlib-2.1.2-py35h016c42a_0.tar.bz2 mkl-2018.0.1-h2108138_4.tar.bz2 multipledispatch-0.4.9-py35hfb38682_0.tar.bz2 networkx-2.0-py35h29b0c50_0.tar.bz2 numexpr-2.6.4-py35hb78e28a_0.tar.bz2 numpy-1.11.3-py35h4fc39be_3.tar.bz2 openssl-1.0.2l-vc14hf4c37d5_5.tar.bz2 pandas-0.18.1-np111py35_0.tar.bz2 pandas-datareader-0.5.0-py35_0.tar.bz2 patsy-0.5.0-py35_0.tar.bz2 pip-9.0.1-py35h691316f_4.tar.bz2 pycparser-2.18-py35h15a15da_1.tar.bz2 pyopenssl-17.4.0-py35hc34edb9_0.tar.bz2 pyparsing-2.2.0-py35hcabcaab_1.tar.bz2 pyqt-5.6.0-py35hd46907b_5.tar.bz2 pysocks-1.6.7-py35hb30ac0d_1.tar.bz2 pytables-3.4.2-py35h9e98cc6_2.tar.bz2 python-3.5.4-h1357f44_23.tar.bz2 python-dateutil-2.6.1-py35h6b299a3_1.tar.bz2 pytz-2017.3-py35hb294b1a_0.tar.bz2 qt-5.6.2-vc14h6f8c307_12.tar.bz2 requests-2.18.4-py35h54a615f_1.tar.bz2 requests-file-1.4.1-py35_0.tar.bz2 requests-ftp-0.3.1-py35_0.tar.bz2 scipy-1.0.0-py35h75710e8_0.tar.bz2 setuptools-38.4.0-py35_0.tar.bz2 sip-4.18.1-py35h01cbaa7_2.tar.bz2 six-1.11.0-py35hc1da2df_1.tar.bz2 sortedcontainers-1.5.9-py35_0.tar.bz2 sqlalchemy-1.2.0-py35hfa6e2cd_0.tar.bz2 sqlite-3.20.1-vc14h7ce8c62_1.tar.bz2 statsmodels-0.8.0-py35hfa6034c_0.tar.bz2 toolz-0.9.0-py35_0.tar.bz2 tornado-4.5.3-py35_0.tar.bz2 urllib3-1.22-py35h8cc84eb_0.tar.bz2 vc-14-h0510ff6_3.tar.bz2 vs2015_runtime-14.0.25123-3.tar.bz2 wheel-0.30.0-py35h38a90bc_1.tar.bz2 win_inet_pton-1.0.1-py35hbef1270_1.tar.bz2 wincertstore-0.2-py35hfebbdb8_0.tar.bz2 zlib-1.2.11-vc14h1cdd9ab_1.tar.bz2
+
+install windows/microsoft visual C++ v14
+http://landinghub.visualstudio.com/visual-cpp-build-tools
+
+conda create -n gateway -c Quantopian --file req.txt
+
+git checkout gateway2 from github
+in gateway/cn_stock_holidays folder, run
+    python setup.py install
+to install above two package
+
+conda install  mysql-connector-python
+
+--------------------------------------------------------
+conda windows shortcut setup
+target
+%windir%\System32\cmd.exe "/K" E:\ProgramData\Anaconda3\Scripts\activate.bat E:\ProgramData\Anaconda3
+
+--------------------------------------------------------
+tk database table structure
+Data Field Name
+
+drop table stockdata;
+create table stockdata (
+    minute datetime,
+    code varchar(16),
+    tradeDate datetime,
+    open_ float,
+    high float,
+    low float,
+    close float,
+    avgPrice float,
+    volume float,
+    amount float,
+    change_ float,
+    changeRatio float,
+    turnoverRatio float,
+    sellVolume float,
+    sellAmount float,
+    buyVolume float,
+    buyAmount float,
+    suspensionFlag varchar(8),
+    tradeStatus varchar(8),
+    primary key(minute, code)
+);
+
+
+// changet stockdata_stage0 and stockdata_stage1
+drop table stockdata_stage;
+create table stockdata_stage (
+    minute datetime,
+    code varchar(16),
+    tradeDate datetime,
+    open_ float,
+    high float,
+    low float,
+    close float,
+    avgPrice float,
+    volume float,
+    amount float,
+    change_ float,
+    changeRatio float,
+    turnoverRatio float,
+    sellVolume float,
+    sellAmount float,
+    buyVolume float,
+    buyAmount float,
+    suspensionFlag varchar(8),
+    tradeStatus varchar(8)
+);
+
+--------------------------------------------------------
+tk mysql mariadb
+setup database :
+mysql_install_db -d <data_path>
+
+setup my.ini (in windows)
+mysqld --defaults-file=<path.to.my.ini> --console
+
+client :
+mysql -u root -p -h ... --protocol tcp
+or just
+mysql -u root
+
+setup root's password as password and new user ths/ths, one
+
+--------------------------------------------------------
+tk download structure
+download realtime(RT) and high frequency(HF) data.
+
+control/config file
+db/table jdbc info
+columns list
+codes list
+from, to date, hh:mm:00
+
+build in list : codes
+build in columns : columns, RT_columns, HF_columns
+command line :  <from> <to>
+    dt_from = '2018-04-11 09:30:00'
+    dt_to = '2018-04-11 15:00:00'
+
+codes download one by one
+
+worker command line : load_data_RT/HF(codes, from, to)
+driver :
+
+load_RT : realtime, always current minutes, from java code
+
+load_HF from to
+load_HF -i hf01.txt  -> hf01.txt.status
+hf01.txt
+from
+to
+code1
+code2
+
+
+
+--------------------------------------------------------
+--------------------------------------------------------
+--------------------------------------------------------
+--------------------------------------------------------
+--------------------------------------------------------

@@ -1,0 +1,9 @@
+include LICENSE
+
+include etc/requirements*.txt
+recursive-include gateway *.pyi
+recursive-include gateway *.pxi
+
+recursive-include gateway/resources *.*
+include versioneer.py
+include gateway/_version.py
