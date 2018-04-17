@@ -562,10 +562,8 @@ def app01() :
         # read file load_HF.conf, -> load_HF.status
 
     log.info("THS login")
-    # ret = THS_iFinDLogin("sissi008","677085")
-    # ret = THS_iFinDLogin("qhfh001","429742")
-    log.info('THS_iFinDLogin("qhfh002","891111")')
-    ret = THS_iFinDLogin("qhfh002","891111")
+    log.info('THS_iFinDLogin(xx, xx)')
+    ret = THS_iFinDLogin(_users[0], _passwords[0])
     log.info("ths login return : " + str(ret))
     if ret != 0 :
         raise Exception('login failed')
@@ -593,8 +591,8 @@ def app01() :
 # worker/main processes define
 ###############################################################
 
-_users = [ 'qhfh001','qhfh002']
-_passwords = ['429742', '891111']
+_users = config.get_users()
+_passwords = config.get_passwords()
 _status_file = 'load_HF.status'
 # format
 # 2018-02-02 done

@@ -574,8 +574,8 @@ def build_todo_list(todo_file, day_stat, day_end) :
 # worker/main processes define
 ###############################################################
 
-_users = [ 'qhfh001','qhfh002']
-_passwords = ['429742', '891111']
+_users = config.get_users()
+_passwords = config.get_passwords()
 
 def worker_dummy(worker_id, q_todos, q_status) :
     worker_name = "worker%d"%worker_id

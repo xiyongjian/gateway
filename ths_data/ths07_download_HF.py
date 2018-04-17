@@ -76,13 +76,13 @@ def load_data(codes, dt_from, dt_to) :
     print("clean stage table")
     result = connection.execute("delete from stockdata_stage")
 
+_users = config.get_users()
+_passwords = config.get_passwords()
 
 if __name__=="__main__":
     print("try to use db connection " + config.config['db_url'])
     print("THS login")
-    # ret = THS_iFinDLogin("sissi008","677085")
-    # ret = THS_iFinDLogin("qhfh001","429742")
-    ret = THS_iFinDLogin("qhfh002","891111")
+    ret = THS_iFinDLogin(_users[0], _passwords[0])
     print("ths login return : " + str(ret))
 
     if False :

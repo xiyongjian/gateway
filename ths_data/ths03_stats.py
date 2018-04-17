@@ -12,8 +12,11 @@ import time
 import json
 from datetime import datetime
 
-_users = [ 'qhfh001','qhfh002']
-_passwords = ['429742', '891111']
+sys.path.append('..')
+import config
+
+_users = config.get_users()
+_passwords = config.get_passwords()
 
 def check(user, password) :
     print("THS login, user %s, password %s"%(user, password))
