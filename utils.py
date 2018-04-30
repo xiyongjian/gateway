@@ -83,6 +83,15 @@ def create_data_panel(dt_from, dt_to) :
         data[code] = df_code
 
     panel = pd.Panel(data)
+
+    if False : # just added for debug/info output
+        panel_file = "db_panel.h5"
+        log.info("panel to_hdf5 file {} start".format(panel_file))
+        panel.to_hdf(panel_file, "db")
+        log.info("panel to_hdf5 file {} done".format(panel_file))
+        import os
+        log.info("hdf5 file size : {}".format(os.path.getsize(panel_file)))
+
     return panel
 
 def test_create_data_panel() :

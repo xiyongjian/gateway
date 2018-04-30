@@ -1,4 +1,6 @@
 '''
+copy from data.py, working on Bar and it's new functionality
+
 copy from gateway, for developement
 
 data access interface, for bardata(gateway) and all kind of factors
@@ -73,7 +75,7 @@ class Factor :
     def get_range(self, tickers, from_sn, to_sn) :
         self.assert_tickers(tickers)
         self.assert_sn(from_sn)
-        self.assert_sn(to_sn)
+        self.assert_sn(to_sn-1)
         return self.df.loc[from_sn:to_sn, tickers]
         pass
 
@@ -100,7 +102,7 @@ class Bar :
 
     def __str__(self):
         s = [];
-        s.append("Bar : {}, base_sn {}%s, df frame shape {}".format(self.name, self.base_sn, self.df.shape))
+        s.append("Bar : {}, base_sn {}, df frame shape {}".format(self.name, self.base_sn, self.df.shape))
         return "\n".join(s)
 
     def full_string(self):
@@ -139,10 +141,12 @@ class Bar :
     def get_range(self, tickers, from_sn, to_sn) :
         self.assert_tickers(tickers)
         self.assert_sn(from_sn)
-        self.assert_sn(to_sn)
+        self.assert_sn(to_sn-1)
         idx_from = from_sn - self.base_sn
         idx_to = to_sn - self.base_sn
-        return self.df.iloc[idx_from:idx_to, tickers]
+        df = self.df.iloc[idx_from:idx_to][tickers]
+        log.info("df : {}".format(df))
+        return self.df.iloc[idx_from:idx_to][tickers]
         pass
 
     def roll(self) :
@@ -170,6 +174,8 @@ class Data :
         s.append("      window_size : %d, current_sn : %d"%(self.window_size, self.current_sn))
         for k in self.factors :
             s.append(str(self.factors[k]))
+        for k in self.bars :
+            s.append(str(self.bars[k]))
         return "\n".join(s)
 
     def create_factor(self, name, window_size = None):
@@ -195,11 +201,15 @@ class Data :
             until = self.current_sn
         if name in self.factors :
             pass
+        elif name in self.bars :
+            return self.get_range(tickers, name, until - self.current_sn - bar_count + 1, until - self.current_sn)
         else :
             return self.data.history(tickers, name, bar_count, frequency)
 
     def current(self, tickers, name):
         if name in self.factors :
+            pass
+        elif name in self.bars :
             pass
         else :
             return self.data.current(tickers, name)
@@ -208,6 +218,8 @@ class Data :
         assert pos <= 0, "pos %d must <= 0"%pos
         if name in self.factors :
             return self.factors[name].get(tickers, self.current_sn + pos)
+        elif name in self.bars :
+            return self.bars[name].get(tickers, self.current_sn + pos)
         else :
             d = self.get_range(tickers, name, pos, 0)
             return d.iloc[0]
@@ -217,7 +229,9 @@ class Data :
         assert pos_to <= 0, "pos_to %d must <= 0"%pos_to
         assert pos_from <= pos_to, "pos_from %d must <= pos_to %d"%(pos_from, pos_to)
         if name in self.factors :
-            return self.factors[name].get_range(tickers, self.current_sn + pos_from, self.current_sn + pos_to)
+            return self.factors[name].get_range(tickers, self.current_sn + pos_from, self.current_sn + pos_to+1)
+        elif name in self.bars :
+            return self.bars[name].get_range(tickers, self.current_sn + pos_from, self.current_sn + pos_to+1)
         else :
             # example from, to : -1, 0
             d = self.data.history(tickers, name, -pos_from+1, "1m")
@@ -319,10 +333,18 @@ def test_bar() :
     data = Data(tickers, 6)
     log.info("data : \n%s"%data)
 
-    df = pd.DataFrame(np.zeros((6, 4)), index = range(6), columns = tickers)
+    index = pd.date_range('2018-04-04 09:30', periods=6, freq='min')
+    log.info("index : {}".format(index))
+    # df = pd.DataFrame(np.zeros((6, 4)), index = index, columns = tickers)
+    df = pd.DataFrame(np.random.rand(6, 4), index = index, columns = tickers)
     data.create_bar("close", df)
     log.info("data : \n%s"%data)
     log.info("close bar : {}".format(data.get_bar("close").full_string()))
+
+    log.info("df test : {}".format(df.iloc[3:5][tickers]))
+
+    data.prepare(5, "lksdf")
+    log.info("history, at 5, close 3 : {}".format(data.history(tickers, "close", 3)))
     pass
 
 if __name__ == "__main__" :
