@@ -53,6 +53,15 @@ def create_data_panel_with_codes(dt_from, dt_to, codes) :
         data[code] = df_code
 
     panel = pd.Panel(data)
+
+    if True : # just added for debug/info output
+        panel_file = "db_panel0.h5"
+        log.info("panel to_hdf5 file {} start".format(panel_file))
+        panel.to_hdf(panel_file, "db")
+        log.info("panel to_hdf5 file {} done".format(panel_file))
+        import os
+        log.info("hdf5 file size : {}".format(os.path.getsize(panel_file)))
+
     return panel
 
 def create_data_panel(dt_from, dt_to) :
@@ -91,6 +100,47 @@ def create_data_panel(dt_from, dt_to) :
         log.info("panel to_hdf5 file {} done".format(panel_file))
         import os
         log.info("hdf5 file size : {}".format(os.path.getsize(panel_file)))
+
+    return panel
+
+def create_data_panel2(dt_from, dt_to) :
+    '''
+    return panel for each code/symbol/stock stored in table stockdata
+    :param dt_from:
+    :param dt_to:
+    :return: panel object
+    '''
+
+    # engine = create_engine("mysql+mysqlconnector://ths:ths@127.0.0.1:3306/test");
+    log.info("create db connection to " + config.config['db_url'])
+    engine = create_engine(config.config['db_url'])
+
+    sql = ' select minute, code, open_, high, low, close, volume from stockdata ' \
+          + ' where minute >= "' + dt_from + '" and minute <="' + dt_to + '"'
+    log.info("run sql : " + sql)
+    df = pd.read_sql(sql, engine)
+    df.rename(columns={'minute':'date',"open_":"open", "change_":"change"}, inplace=True)
+    log.info("loaded, shape : %s"%str(df.shape))
+
+    data = OrderedDict()
+    for code, df_code in df.groupby('code'):
+        # log.info("code : " + code)
+        # log.info('df_code, type : ' + str(type(df_code)))
+        df_code.set_index('date', inplace=True)
+        df_code.sort_index(inplace=True)
+        data[code] = df_code
+
+    panel = pd.Panel(data)
+
+    if False : # just added for debug/info output
+        panel_file = "db_panel.h5"
+        log.info("panel to_hdf5 file {} start".format(panel_file))
+        panel.to_hdf(panel_file, "db")
+        log.info("panel to_hdf5 file {} done".format(panel_file))
+        import os
+        log.info("hdf5 file size : {}".format(os.path.getsize(panel_file)))
+
+    log.info("prepare unstack panel based on columns")
 
     return panel
 

@@ -185,12 +185,14 @@ if __name__ == '__main__' :
     if False :
         panel = utils.create_data_panel("2018-03-28 09:30:00", "2018-04-03 15:00:00")
         log.info("get panal shape : {}".format(panel.shape))
-    elif False:
+    elif False :
         codes = ['000001.SZ', '000002.SZ', '000004.SZ', '000005.SZ', '000006.SZ', '000007.SZ', '000008.SZ', '000009.SZ', '000010.SZ', '000011.SZ', '000012.SZ']
-        panel = utils.create_data_panel_with_codes("2018-04-03 09:30:00", "2018-04-04 09:31:00", codes)
+        # panel = utils.create_data_panel_with_codes("2018-04-03 09:30:00", "2018-04-04 09:31:00", codes)
+        panel = utils.create_data_panel_with_codes("2018-03-28 09:30:00", "2018-04-03 15:00:00", codes)
         log.info("get panal shape : {}".format(panel.shape))
     else :
         panel_file = "db_panel.h5"
+        panel_file = "db_panel0_03.h5"
         log.info("read panale from hdf5 file {} start".format(panel_file))
         panel = pd.read_hdf(panel_file)
         log.info("read panale from hdf5 file {} done".format(panel_file))
