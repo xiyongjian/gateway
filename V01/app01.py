@@ -13,6 +13,7 @@ if True :
 import data
 import watchlists
 import utils
+import pandas as pd
 
 class TradingEnv :
     def __init__(self):
@@ -163,12 +164,18 @@ class MyStrategy(Strategy) :
         pass
 
 if __name__ == "__main__" :
-    panel = utils.create_data_panel("2018-04-09 09:30:00", "2018-04-11 15:00:00")
-    log.info("panel shape : {}".format(panel.shape))
-    log.info("panel items : {}".format(panel.items))
-    # log.info("panel columns : {}".format(panel.columns))
-    log.info("panel major_axis : {}".format(panel.major_axis))
-    log.info("panel['close'].iloc[:2, :2] : \n{}".format(panel["close"].iloc[:2, :2]))
+    if False :
+        panel = utils.create_data_panel("2018-04-09 09:30:00", "2018-04-11 15:00:00")
+        log.info("panel shape : {}".format(panel.shape))
+        log.info("panel items : {}".format(panel.items))
+        # log.info("panel columns : {}".format(panel.columns))
+        log.info("panel major_axis : {}".format(panel.major_axis))
+        log.info("panel['close'].iloc[:2, :2] : \n{}".format(panel["close"].iloc[:2, :2]))
+    else :
+        panel_file = "db_panel0.h5"
+        log.info("read panale from hdf5 file {} start".format(panel_file))
+        panel = pd.read_hdf(panel_file)
+        log.info("read panale from hdf5 file {} done".format(panel_file))
 
     env = TradingEnv();
     strategy = MyStrategy();
