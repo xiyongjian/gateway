@@ -98,6 +98,8 @@ class MyStrategy(Strategy) :
         self.watchlists = wls
 
         d.create_factor(name="sma5", window_size=10)
+
+        self.datetime_index = panel[panel.items[0]].index
         pass
 
     def prepare(self, sn, d) :
@@ -112,7 +114,7 @@ class MyStrategy(Strategy) :
         pass
 
     def handle(self, sn, d) :
-        log.info("----------- handle, sn {} --------------".format(sn))
+        log.info("----------- handle, sn {}, date {} --------------".format(sn, self.datetime_index[sn]))
 
         if sn <= 5 :
             log.info("skip first 5 for sma5 history of 5")
@@ -176,6 +178,7 @@ if __name__ == "__main__" :
         log.info("read panale from hdf5 file {} start".format(panel_file))
         panel = pd.read_hdf(panel_file)
         log.info("read panale from hdf5 file {} done".format(panel_file))
+        log.info("panel datetime_index, type : {}".format(type(panel[panel.items[0]].index)))
 
     env = TradingEnv();
     strategy = MyStrategy();
