@@ -99,7 +99,7 @@ class MyStrategy(Strategy) :
 
         d.create_factor(name="sma5", window_size=10)
 
-        self.datetime_index = panel[panel.items[0]].index
+        # self.datetime_index = panel[panel.items[0]].index
         pass
 
     def prepare(self, sn, d) :
@@ -164,6 +164,10 @@ class MyStrategy(Strategy) :
         if sn == 15 :
             log.info("DEBUG - watchlist : \n{}".format(self.watchlists))
         pass
+
+def get_data(from_dt = None, to_dt = None, tickers = None) :
+    # return panel
+    pass
 
 if __name__ == "__main__" :
     if False :

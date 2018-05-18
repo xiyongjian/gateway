@@ -28,6 +28,12 @@ def check(user, password) :
     stats = THS_DataStatistics()
     print("stats : ", json.dumps(stats, indent=4))
 
+    print("testing download something")
+    ret = THS_HighFrequenceSequence('600000.SH,600004.SH,600006.SH', 'open;high',
+                                    'CPS:0,MaxPoints:50000,Fill:Previous,Interval:1', '2018-04-10 09:15:00',
+                                    '2018-04-10 15:15:00')
+    print("download return : ", json.dumps(ret, indent=4)[:100])
+
     stats = THS_DataStatistics()
     print("stats2 : ", json.dumps(stats, indent=4))
 
