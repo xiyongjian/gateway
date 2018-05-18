@@ -28,6 +28,29 @@ def check(user, password) :
     stats = THS_DataStatistics()
     print("stats : ", json.dumps(stats, indent=4))
 
+    print("testing download something")
+    ret = THS_HighFrequenceSequence('600000.SH,600004.SH,600006.SH', 'open;high',
+                                    'CPS:0,MaxPoints:50000,Fill:Previous,Interval:1', '2018-04-10 09:15:00',
+                                    '2018-04-10 15:15:00')
+    print("download return : ", json.dumps(ret, indent=4)[:100])
+
+    stats = THS_DataStatistics()
+    print("stats2 : ", json.dumps(stats, indent=4))
+
+    THS_iFinDLogout()
+    print("done.")
+
+def test_download(user, password):
+    print("THS login, user %s, password %s"%(user, password))
+    printret = THS_iFinDLogin(user, password)
+    ret = THS_iFinDLogin(user, password)
+    print("login return : %r"%ret)
+
+    ret = THS_HighFrequenceSequence('600000.SH,600004.SH,600006.SH', 'open;high',
+                              'CPS:0,MaxPoints:50000,Fill:Previous,Interval:1', '2018-04-10 09:15:00',
+                              '2018-04-10 15:15:00')
+    print("download return : ", json.dumps(ret, indent=4)[:100])
+
     stats = THS_DataStatistics()
     print("stats2 : ", json.dumps(stats, indent=4))
 
@@ -38,5 +61,8 @@ if __name__=="__main__":
     print("start")
     check(_users[0], _passwords[0])
     check(_users[1], _passwords[1])
+
+    # test_download(_users[0], _passwords[0])
+    # test_download(_users[0], _passwords[0])
     print("done")
 
