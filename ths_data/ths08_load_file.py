@@ -29,9 +29,12 @@ config = {
 }
 
 def get_sql_engine() :
-    certs_dir = os.path.dirname(__file__) + os.path.sep + "certs"
+    filepath = os.path.abspath(__file__)
+    certs_dir = os.path.dirname(filepath) + os.path.sep + "certs"
+    ca_file = certs_dir + os.path.sep + 'ca-cert.pem';
+    log.info("ca certs file : {}, exists {}".format(ca_file, os.path.exists(ca_file)))
     engine = create_engine(config['db_url'], connect_args={
-        'ssl_ca': certs_dir + os.path.sep + 'ca-cert.pem',
+        'ssl_ca': ca_file
     })
     return engine
 
@@ -174,9 +177,9 @@ if __name__ == '__main__':
 
     parser = argparse.ArgumentParser(description='load realtime data to database (1 minute).')
     parser.add_argument('--file', dest='file', help='filename of realtime data', nargs=1, required=True)
-    # result = parser.parse_args(sys.argv[1:])
+    result = parser.parse_args(sys.argv[1:])
     # result = parser.parse_args(['--file', 'c:/xyj/tmp/ths/20180704/rt_20180704-111200_00.dat'])
-    result = parser.parse_args(['--file', 'c:/xyj/tmp/ths/*/rt*.dat'])
+    # result = parser.parse_args(['--file', 'c:/xyj/tmp/ths/*/rt*.dat'])
     log.info('parsing result : ' + str(result))
 
     file = result.file[0]
@@ -185,7 +188,9 @@ if __name__ == '__main__':
         cnt = cnt + 1
         try :
             log.info("file # {}, load file {}".format(cnt, f))
-            # load_realtime_file(f)
+            load_realtime_file(f)
+        except KeyboardInterrupt:
+            raise
         except :
             log.error("exception in loading file {}\n{}".format(f, traceback.format_exc()))
 
