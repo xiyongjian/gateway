@@ -1,4 +1,12 @@
 --------------------------------------------------------
+tk ths document
+http://quantapi.10jqka.com.cn/thsft/iFindService/DataInterfaceWeb/Index/index
+
+接口数据包下载：
+
+http://www.51ifind.com/index.php?c=index&a=download#
+
+--------------------------------------------------------
 tk initial commit code change
 
 switch project name to 'gateway'
