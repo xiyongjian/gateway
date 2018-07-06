@@ -1,7 +1,6 @@
 '''
-copy from gateway, for developement
-
-data access interface, for bardata(gateway) and all kind of factors
+Data access interface, for bardata(gateway) and all kind of factors
+with factor & bar data
 '''
 
 import pandas as pd
@@ -9,7 +8,7 @@ import numpy as np
 
 import sys
 import logbook
-log = logbook.Logger("data.py")
+log = logbook.Logger("Data.py")
 
 class Factor :
     def __init__(self, name, tickers, window_size, sn = 0) :
@@ -73,7 +72,7 @@ class Factor :
     def get_range(self, tickers, from_sn, to_sn) :
         self.assert_tickers(tickers)
         self.assert_sn(from_sn)
-        self.assert_sn(to_sn)
+        self.assert_sn(to_sn-1)
         return self.df.loc[from_sn:to_sn, tickers]
         pass
 
@@ -100,7 +99,7 @@ class Bar :
 
     def __str__(self):
         s = [];
-        s.append("Bar : {}, base_sn {}%s, df frame shape {}".format(self.name, self.base_sn, self.df.shape))
+        s.append("Bar : {}, base_sn {}, df frame shape {}".format(self.name, self.base_sn, self.df.shape))
         return "\n".join(s)
 
     def full_string(self):
@@ -133,33 +132,33 @@ class Bar :
             sn = self.current_sn
         self.assert_tickers(tickers)
         self.assert_sn(sn)
-        idx = self.sn - self.base_sn
-        return self.df.iloc[idx, tickers]
+        idx = sn - self.base_sn
+        return self.df.iloc[idx][tickers]
 
     def get_range(self, tickers, from_sn, to_sn) :
         self.assert_tickers(tickers)
         self.assert_sn(from_sn)
-        self.assert_sn(to_sn)
+        self.assert_sn(to_sn-1)
         idx_from = from_sn - self.base_sn
         idx_to = to_sn - self.base_sn
-        return self.df.iloc[idx_from:idx_to, tickers]
+        # df = self.df.iloc[idx_from:idx_to][tickers]
+        # log.info("df : {}".format(df))
+        # return self.df.iloc[idx_from:idx_to][tickers]
+        return self.df.iloc[idx_from:idx_to][list(tickers)]
         pass
 
     def roll(self) :
         assert False, "should not call this method in Bar"
 
 class Data :
-    def __init__(self, tickers, windows_size) :
+    def __init__(self, tickers, window_size) :
         self.tickers = tickers
         self.current_sn = 0
-        self.factors = {}
-        self.bars = {}
-        self.data = None
-        self.window_size = windows_size
+        self.factors = {}   # factors include bars
+        self.window_size = window_size
 
-    def prepare(self, sn, data):
+    def set_sn(self, sn):
         self.current_sn = sn
-        self.data = data
         # todo prepare factors, calcuation, and set current_idx -> sn (assert)
         for n, f in self.factors.items() :
             f.set_sn(sn)
@@ -172,162 +171,65 @@ class Data :
             s.append(str(self.factors[k]))
         return "\n".join(s)
 
+    def full_string(self) :
+        s = []
+        s.append("Data, # of tickers : %d, # of factors : %d"%(len(self.tickers), len(self.factors)))
+        s.append("      window_size : %d, current_sn : %d"%(self.window_size, self.current_sn))
+        for k in self.factors :
+            s.append(self.factors[k].full_string())
+        return "\n".join(s)
+
     def create_factor(self, name, window_size = None):
         if window_size == None :
             window_size = self.window_size
         factor = Factor(name, self.tickers, window_size, self.current_sn)
-        self.factors[name] = factor
+        self.add_factor(factor)
 
-    def get_factor(self, name) :
-        assert name in self.factors, "name %s must be in factors %s"%(name, self.factors.keys())
-        return self.factors[name]
+    def add_factor(self, factor):
+        self.factors[factor.name] = factor
+        factor.set_sn(self.current_sn)
 
-    def create_bar(self, name, df) :
-        bar = Bar(name, df)
-        self.bars[name] = bar
+    def add_bar(self, bar) :
+        self.factors[bar.name] = bar
+        bar.set_sn(self.current_sn)
 
-    def get_bar(self, name) :
-        assert name in self.bars, "name %s must be in factors %s"%(name, self.factors.keys())
-        return self.bars[name]
-
-    def history(self, tickers, name, bar_count, frequency='1m', until = None):
-        if until == None :
-            until = self.current_sn
-        if name in self.factors :
-            pass
-        else :
-            return self.data.history(tickers, name, bar_count, frequency)
-
-    def current(self, tickers, name):
-        if name in self.factors :
-            pass
-        else :
-            return self.data.current(tickers, name)
-
-    def get(self, tickers, name, pos = 0):
-        assert pos <= 0, "pos %d must <= 0"%pos
-        if name in self.factors :
-            return self.factors[name].get(tickers, self.current_sn + pos)
-        else :
-<<<<<<< HEAD
-            data = self.get_range(tickers, name, pos, 0)
-            return data.iloc[0]
-=======
-            d = self.get_range(tickers, name, pos, 0)
-            return d.iloc[0]
->>>>>>> remotes/origin/master
-
-    def get_range(self, tickers, name, pos_from, pos_to = 0):
+    # get tickers' name data of len, at pos (0, -1, -2...)
+    def get(self, name, tickers, pos = 0, len = 1):
+        pos_to = pos
+        pos_from = pos - len + 1
         assert pos_from <= 0, "pos_from %d must <= 0"%pos_from
         assert pos_to <= 0, "pos_to %d must <= 0"%pos_to
         assert pos_from <= pos_to, "pos_from %d must <= pos_to %d"%(pos_from, pos_to)
-        if name in self.factors :
-            return self.factors[name].get_range(tickers, self.current_sn + pos_from, self.current_sn + pos_to)
+        if len == 1 :
+            return self.factors[name].get(tickers, self.current_sn + pos)
         else :
-            # example from, to : -1, 0
-            d = self.data.history(tickers, name, -pos_from+1, "1m")
-            # log.info("d shape ")
-            # log.info(d.shape)
-            # log.info("d's indes : %r"%d.index)
-            return d.iloc[0:(pos_to - pos_from+1)]
-        pass
+            return self.factors[name].get_range(tickers, self.current_sn + pos_from, self.current_sn + pos_to+1)
 
+    def set(self, name, tickers, value, pos = 0):
+        assert pos <= 0, "pos %d must <= 0"%pos
+        self.factors[name].set(tickers, value, self.current_sn + pos)
 
-def test_general() :
+def test_01() :
+    log.info("test_01() {}".format("no args"))
+
     tickers = ['a', 'b', 'c', 'd']
-    data = Data(tickers)
-    log.info("data : %s"%data)
+    data = Data(tickers, 3)
+    log.info("data : \n%s"%data)
 
-    data.create_factor("sma50", 10)
-    log.info("after create factor sma50, 10 : %s"%data)
+    data.create_factor("sma50", 3)
+    log.info("after create factor sma50, 10 : \n{}".format(data))
 
-    factor = data.get_factor("sma50")
-    log.info("before set factor sma50 values : %s"%factor.full_string())
-    factor.set_sn(1)
-    factor.set(['a', 'c'], [99, 11])
-    log.info("after set factor sma50 values : %s"%factor.full_string())
+    data.set_sn(1);
+    data.set("sma50", tickers, [1,2,3,4])
+    log.info("data : \n%s"%data.full_string())
 
-    factor.set_sn(5)
-    factor.set(['a', 'b'], [99, 44])
-    log.info("get 1 'a' : %s"%factor.get(1, ['a']))
-    log.info("after set factor sma50 at 5 : %s"%factor.full_string())
+    df = pd.DataFrame(np.random.rand(10, 4), columns = tickers)
+    bar = Bar("price", df)
+    data.add_bar(bar)
+    log.info("after add bar, data : \n%s"%data.full_string())
     pass
 
-def test_factor_rolling() :
-    tickers = ['a', 'b', 'c', 'd']
-    data = Data(tickers)
-    log.info("data : \n%s"%data)
-
-    data.create_factor("sma50", 5)
-    log.info("after create factor sma50, 10 : \n%s"%data)
-
-    factor = data.get_factor("sma50")
-    log.info("before set factor sma50 values : \n%s"%factor.full_string())
-    factor.set_sn(1)
-    factor.set(['a', 'c'], [99, 11])
-    factor.set_sn(6)
-    factor.set(['a', 'b'], [99, 23])
-    factor.set_sn(7)
-    factor.set(['d', 'c'], [88, 109])
-    factor.set_sn(8)
-    factor.set(['a', 'd'], [66, 1])
-    factor.set_sn(11)
-    factor.set(['a', 'c'], [66, 99])
-    log.info("after set factor sma50 values : %s"%factor.full_string())
-
-    factor.roll()
-    log.info("after rolling : %s"%factor.full_string())
-
-    log.info("before rolling : %s"%factor.full_string())
-    factor.set_sn(11)
-    factor.set(['a', 'b', 'd', 'c'], [1,2,3,4])
-    factor.set_sn(12)
-    factor.set(['a', 'b', 'd', 'c'], [11,2,3,4])
-    factor.set_sn(14)
-    factor.set(['a', 'c', 'd', 'b'], [1,2,3,4])
-    factor.roll()
-    log.info("after rolling : %s"%factor.full_string())
-
-    log.info("factor.get(['a', 'b'] : %s"%factor.get(['a', 'b']))
-    log.info("factor.get(['a', 'b'], 10 : %s"%factor.get(['a', 'b'], 10))
-
-def test_set_get() :
-    tickers = ['a', 'b', 'c', 'd']
-    data = Data(tickers, 6)
-    log.info("data : \n%s"%data)
-
-    data.create_factor("sma50", 5)
-    log.info("after create factor sma50, 10 : \n%s"%data)
-
-    factor = data.get_factor("sma50")
-    log.info("before set factor sma50 values : \n%s"%factor.full_string())
-    factor.set_sn(1)
-    factor.set(['a', 'c'], [10, 11])
-    factor.set_sn(3)
-    factor.set(['a', 'c'], [30, 33])
-    factor.set_sn(5)
-    factor.set(['a', 'c'], [50, 55])
-    factor.set_sn(6)
-    factor.set(['a', 'c'], [60, 66])
-    log.info("after set factor sma50 values : \n%s"%factor.full_string())
-
-    data.prepare(6, 'abcde')
-    log.info("data : \n%s"%data)
-    log.info("get sma50 : %s"%(data.get(['a', 'd', 'c'], 'sma50')))
-    log.info("get sma50, -4 -2 : %s"%(data.get_range(['a', 'd', 'c'], 'sma50', -4, -2)))
-    log.info("get sma50, -5 : %s"%(data.get_range(['a', 'd', 'c'], 'sma50', -4)))
-    log.info("get sma50, -5, mean : %s"%(data.get_range(['a', 'd', 'c'], 'sma50', -4).mean()))
-    pass
-
-def test_bar() :
-    tickers = ['a', 'b', 'c', 'd']
-    data = Data(tickers, 6)
-    log.info("data : \n%s"%data)
-
-    df = pd.DataFrame(np.zeros((6, 4)), index = range(6), columns = tickers)
-    data.create_bar("close", df)
-    log.info("data : \n%s"%data)
-    log.info("close bar : {}".format(data.get_bar("close").full_string()))
+def test_02() :
     pass
 
 if __name__ == "__main__" :
@@ -335,8 +237,5 @@ if __name__ == "__main__" :
     handler.formatter.format_string = '{record.time}|{record.level_name}|{record.module}|{record.func_name}|{record.lineno}|{record.message}'
     handler.push_application()
 
-    # test_general()
-    # test_factor_rolling()
-    test_set_get()
-    # test_set_get()
-    test_bar()
+    test_01()
+

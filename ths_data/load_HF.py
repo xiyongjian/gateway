@@ -519,6 +519,11 @@ def load_data(worker_id, dt_from, dt_to, codes, columns) :
 
     data = download_HF(codes, columns, dt_from, dt_to)
 
+    file = "download/{}_{}_{:03d}.pkl".format(dt_from, dt_to, worker_id)\
+        .replace(":", "_").replace(" ", "_")
+    log.info("save dataframe to {}".foramt(file))
+    data.to_pickle(file)
+
     # log.info(data.info());
     # log.info(data)
     log.info("data length : %d"%len(data['time']))

@@ -1,4 +1,12 @@
 --------------------------------------------------------
+tk ths document
+http://quantapi.10jqka.com.cn/thsft/iFindService/DataInterfaceWeb/Index/index
+
+接口数据包下载：
+
+http://www.51ifind.com/index.php?c=index&a=download#
+
+--------------------------------------------------------
 tk initial commit code change
 
 switch project name to 'gateway'
@@ -13,54 +21,6 @@ add file :
     watchlists.py
 
 find .. | while read i ; do ed $i <<< $',s/xx/gateway/g'; done
-
-code changes :
-===================== gateway/./algorithm.py
-@@ -134,6 +137,9 @@
-+from gateway.gens import sim_engine2
-
-@@ -266,6 +272,8 @@
-+        self.clock_file = kwargs.pop('clock_file', None)
-
-@@ -583,7 +591,8 @@
--            self._create_clock(),
-+            # self._create_clock(),
-
-===================== gateway/./finance/risk/cumulative.py
-@@ -142,8 +142,15 @@
-     def update(self, dt, algorithm_returns, benchmark_returns, leverage):
-         # Keep track of latest dt for use in to_dict and other methods
-         # that report current state.
--        self.latest_dt = dt
-+
-+        try :
-         dt_loc = self.cont_index.get_loc(dt)
-+        except Exception as e :
-+            log.info("missing dt %s in cont_index"%(str(dt)))
-+            return
-+
-+        self.latest_dt = dt
-+        # dt_loc = self.cont_index.get_loc(dt)
-         self.latest_dt_loc = dt_loc
-
-===================== gateway/./gens/tradesimulation.py
-@@ -186,8 +186,12 @@
-                     perf_tracker.position_tracker.handle_splits(splits)
-
-         def handle_benchmark(date, benchmark_source=self.benchmark_source):
-+            try :
-             algo.perf_tracker.all_benchmark_returns[date] = \
-                 benchmark_source.get_value(date)
-+            except Exception as e :
-+                # algo.perf_tracker.all_benchmark_returns[date] = 1
-+                pass
-
-===================== gateway/./__init__.py
-+'''.
-+extra added.
-+'''.
-+from . watchlists import WatchLists.
-+from . data import Data.
 
 
 --------------------------------------------------------

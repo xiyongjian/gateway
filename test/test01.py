@@ -59,3 +59,11 @@ c = [True,False,True,True,True,True,True,True,True]
 print("c : %r"%c)
 
 print([i for (i, cond) in zip(a, c) if cond])
+
+def func() :
+    return 1,2,3
+
+a,b,c = func()
+print("func a : ", a)
+print("func b : ", b)
+print("func c : ", c)
