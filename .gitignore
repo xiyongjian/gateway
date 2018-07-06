@@ -81,3 +81,7 @@ TAGS
 *.todos
 
 config.ini
+
+download/
+*bak*
+

@@ -1,5 +1,5 @@
 '''
-load high frqequent data (1 minute) from THS into database
+load high frqequent data (1 minute) from THS into file. copy from load_HF
 '''
 
 import argparse
@@ -509,8 +509,9 @@ def download_HF(codes, columns, dt_from, dt_to) :
 
 # worker_id 0/1, related to THS login account and staging table 0/1
 # codes is string "21,232,24,2,sdfs"
-def load_data(worker_id, dt_from, dt_to, codes, columns) :
+def load_data_tofile(filename, worker_id, dt_from, dt_to, codes, columns) :
     log.info("load_data worker_id : %d"%worker_id)
+    log.info("load_data tofile : {}".format(filename))
     log.info("load_data codes #: %d"%len(codes.split(",")))
     log.info("load_data columns # : %d"%len(columns.split(';')))
     log.info("load_data columns : " + columns)
@@ -523,29 +524,39 @@ def load_data(worker_id, dt_from, dt_to, codes, columns) :
     # log.info(data)
     log.info("data length : %d"%len(data['time']))
 
-    stage_table = "stockdata_stage%d"%worker_id
+    if True :
+        file = filename + ".csv"
+        log.info("save data, shape {}, to file {}".format(data.shape, file))
+        data.to_csv(filename + ".csv")
+    else :
+        file = filename + ".h5"
+        log.info("save data, shape {}, to file {}".format(data.shape, file))
+        data.to_hdf(filename + ".h5", key='df', mode='w')
 
-    log.info("create db connection to " + config.config['db_url'])
-    engine = create_engine(config.config['db_url'])
-    # engine = create_engine("mysql+mysqlconnector://ths:ths@127.0.0.1:3306/test");
-    data.rename(columns={'thscode': 'code', 'time': 'minute', 'open': 'open_', 'change': 'change_'}, inplace=True)
-    log.info("load into %s"%stage_table)
-    # data.to_sql(name=stage_table, con=engine, if_exists='append', index=False)
-    data.to_sql(name=stage_table, con=engine, if_exists='append', index=False, chunksize=100)
 
-    # connection = engine.connect()
-    # result = connection.execute("replace into stockdata select * from %s"%stage_table)
-    log.info("replace into from %s"%stage_table)
-    result = engine.execute("replace into stockdata select * from %s"%stage_table)
-    log.info("replace into, return : " + str(result))
+    if False :
+        stage_table = "stockdata_stage%d"%worker_id
 
-    log.info("clean stage table %s"%stage_table)
-    # result = connection.execute("delete from %s"%stage_table)
-    result = engine.execute("delete from %s"%stage_table)
-    log.info("delete from, return : " + str(result))
+        log.info("create db connection to " + config.config['db_url'])
+        engine = create_engine(config.config['db_url'])
+        # engine = create_engine("mysql+mysqlconnector://ths:ths@127.0.0.1:3306/test");
+        data.rename(columns={'thscode': 'code', 'time': 'minute', 'open': 'open_', 'change': 'change_'}, inplace=True)
+        log.info("load into %s"%stage_table)
+        data.to_sql(name=stage_table, con=engine, if_exists='append', index=False)
 
-    log.info("close engine")
-    engine.dispose()
+        # connection = engine.connect()
+        # result = connection.execute("replace into stockdata select * from %s"%stage_table)
+        log.info("replace into from %s"%stage_table)
+        result = engine.execute("replace into stockdata select * from %s"%stage_table)
+        log.info("replace into, return : " + str(result))
+
+        log.info("clean stage table %s"%stage_table)
+        # result = connection.execute("delete from %s"%stage_table)
+        result = engine.execute("delete from %s"%stage_table)
+        log.info("delete from, return : " + str(result))
+
+        log.info("close engine")
+        engine.dispose()
 
 def app01() :
     pass
@@ -616,12 +627,13 @@ def worker_dummy(worker_id, q_todos, q_status) :
     pass
 
 
-def worker(worker_id, q_todos, q_status) :
+def worker(worker_id, q_todos, q_status, download_file_prefix) :
     worker_name = "worker%d"%worker_id
     log.info("THS login")
     log.info('THS_iFinDLogin(%s, %s)'%(_users[worker_id], _passwords[worker_id]))
     ret = THS_iFinDLogin(_users[worker_id], _passwords[worker_id])
     log.info("ths login return : " + str(ret))
+    log.info("download_file_prefix : {}".format(download_file_prefix))
     if ret != 0 :
         raise Exception('login failed')
 
@@ -636,12 +648,18 @@ def worker(worker_id, q_todos, q_status) :
         if todo is not None :    # process it
             line_no = todo[0]
             pcode = todo[1]
+            filename = download_file_prefix + ".L{:05d}".format(line_no)
+            pcode = pcode.replace("load_data(", "load_data_tofile('{}',".format(filename))
+
             log.info("loading, line_no %d, python code %s"%(line_no, pcode))
             try :
                 log.info("run pcode")
-                exec(pcode.replace("WORKER_ID", str(worker_id)))
-                log.info("put done into status queue")
-                q_status.put([line_no, "done"])
+                if True :
+                    exec(pcode.replace("WORKER_ID", str(worker_id)))
+                    log.info("put done into status queue")
+                    q_status.put([line_no, "done"])
+                else :
+                    q_status.put([line_no, "failed"])
             except :
                 log.info("load data, error: %s"%str(sys.exc_info()[0]))
                 log.info("traceback:" + str(traceback.format_exc()))
@@ -661,7 +679,8 @@ def worker(worker_id, q_todos, q_status) :
     log.info("done.")
     pass
 
-def load_todo_list(todo_file, status_file) :
+def load_todo_list(todo_file, status_file, download_file_prefix) :
+    log.info("download_file_prefix : {}".format(download_file_prefix))
     log.info("load %s, status %s"%(todo_file, status_file))
     log.info("current patah : " + os.getcwd())
 
@@ -697,8 +716,8 @@ def load_todo_list(todo_file, status_file) :
     log.info("qeueu todos's size : %d"%(q_todos.qsize()))
 
     log.info("start two worker")
-    w0 = Process(target=worker, args=(0, q_todos, q_status))
-    w1 = Process(target=worker, args=(1, q_todos, q_status))
+    w0 = Process(target=worker, args=(0, q_todos, q_status, download_file_prefix))
+    w1 = Process(target=worker, args=(1, q_todos, q_status, download_file_prefix))
     w0.start()
     w1.start()
 
@@ -738,7 +757,14 @@ def load_todo_list(todo_file, status_file) :
 
 if __name__ == '__main__':
     if False :
-        app01()
+        log.info("load HF data to file")
+        if os.path.exists("download") :
+            log.info("folder download exists, pass mkdir");
+        else :
+            log.info("mkdir folder download")
+            os.mkdir("download")
+        with open("download/tmp.txt", "w") as fp :
+            fp.write("hello, world for testing");
         sys.exit(0)
         # main(start, end, status_file)
 
@@ -766,6 +792,7 @@ if __name__ == '__main__':
     #       --name HF2017 --load
     todo_file = result.name[0] + ".todos"
     status_file = result.name[0] + ".status"
+    download_file_prefix = "download/" + result.name[0];
     if result.dates is not None :
         day_start = datetime.strptime(result.dates[0], "%Y-%m-%d")
         day_end = datetime.strptime(result.dates[1], "%Y-%m-%d")
@@ -773,7 +800,7 @@ if __name__ == '__main__':
     elif result.load :
         log.info("todos : " + todo_file)
         log.info("staus : " + status_file)
-        load_todo_list(todo_file, status_file)
+        log.info("download_file_prefix : " + download_file_prefix)
+        load_todo_list(todo_file, status_file, download_file_prefix)
 
     log.info("main done")
-
