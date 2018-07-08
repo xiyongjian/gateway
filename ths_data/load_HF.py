@@ -40,7 +40,8 @@ if True :
     log = logbook.Logger("load_HF")
 
 batch_size = 100;
-HF_columns = 'open;high;low;close;avgPrice;volume;amount;change;changeRatio;turnoverRatio;sellVolume;buyVolume;buyAmount;sellAmount'
+# HF_columns = 'open;high;low;close;avgPrice;volume;amount;change;changeRatio;turnoverRatio;sellVolume;buyVolume;buyAmount;sellAmount'
+HF_columns = 'high;low;close'
 all_codes = ['000001.SZ', '000002.SZ', '000004.SZ', '000005.SZ', '000006.SZ', '000007.SZ', '000008.SZ', '000009.SZ',
              '000010.SZ', '000011.SZ', '000012.SZ', '000014.SZ', '000016.SZ', '000017.SZ', '000018.SZ', '000019.SZ',
              '000020.SZ', '000021.SZ', '000022.SZ', '000023.SZ', '000025.SZ', '000026.SZ', '000027.SZ', '000028.SZ',
